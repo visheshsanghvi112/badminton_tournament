@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Symbiosis Tournament Design System - Professional & Sports Energy
+All colors MUST be HSL for proper design system integration.
+*/
+
+@layer base {
+  :root {
+    /* Core Background & Text */
+    --background: 0 0% 100%;
+    --foreground: 215 25% 15%;
+
+    /* Card System */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    /* Interactive Elements */
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Symbiosis Brand Colors */
+    --primary: 0 75% 50%; /* Symbiosis Red */
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 0 75% 95%; /* Soft red background */
+
+    /* Professional Navy for Authority */
+    --secondary: 215 45% 25%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Tournament Energy Colors */
+    --accent: 45 100% 55%; /* Gold for winners/highlights */
+    --accent-foreground: 215 25% 15%;
+
+    /* Subtle Elements */
+    --muted: 210 15% 97%;
+    --muted-foreground: 215 15% 45%;
+
+    /* Sports Action Color */
+    --sports: 200 90% 45%; /* Dynamic blue */
+    --sports-foreground: 0 0% 100%;
+
+    /* System Colors */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 215 15% 88%;
+    --input: 215 15% 88%;
+    --ring: 0 75% 50%;
+
+    --radius: 0.75rem;
+    
+    /* Tournament Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(0 75% 50%), hsl(215 45% 25%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 15% 97%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 100% 55%), hsl(200 90% 45%));
+    
+    /* Shadows */
+    --shadow-tournament: 0 10px 30px -10px hsl(0 75% 50% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(215 25% 15% / 0.1);
+    --shadow-hero: 0 20px 60px -20px hsl(0 75% 50% / 0.4);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Mode - Professional Tournament Theme */
+    --background: 215 25% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 215 25% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 215 25% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Symbiosis Red stays prominent in dark */
+    --primary: 0 75% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 0 75% 15%;
+
+    --secondary: 215 30% 20%;
+    --secondary-foreground: 0 0% 95%;
+
+    --accent: 45 100% 65%;
+    --accent-foreground: 215 25% 8%;
+
+    --muted: 215 25% 15%;
+    --muted-foreground: 215 15% 60%;
+
+    --sports: 200 90% 55%;
+    --sports-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 25% 20%;
+    --input: 215 25% 20%;
+    --ring: 0 75% 55%;
+    
+    /* Dark Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(0 75% 55%), hsl(215 45% 15%));
+    --gradient-card: linear-gradient(135deg, hsl(215 25% 10%), hsl(215 25% 15%));
+    --shadow-tournament: 0 10px 30px -10px hsl(0 75% 55% / 0.4);
+    --shadow-hero: 0 20px 60px -20px hsl(0 75% 55% / 0.5);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -1,0 +1,59 @@
+User-agent: *
+Allow: /
+
+# High priority pages
+Allow: /
+Allow: /about
+Allow: /register
+Allow: /sponsors
+Allow: /contact
+
+# Standard pages
+Allow: /gallery
+Allow: /faq
+Allow: /login
+
+# Block any admin or sensitive paths (future-proofing)
+Disallow: /admin
+Disallow: /api
+Disallow: /_next
+Disallow: /node_modules
+Disallow: /.env
+Disallow: /package.json
+
+# Sitemap location
+Sitemap: https://tournament2025.symbiosis.ac.in/sitemap.xml
+
+# Crawl delay (respectful crawling)
+Crawl-delay: 1
+
+# Allow common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /

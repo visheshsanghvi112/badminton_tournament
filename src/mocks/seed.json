@@ -1,0 +1,183 @@
+{
+  "universities": [
+    {
+      "id": "UNIV_101",
+      "name": "Symbiosis International University",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "contact": {
+        "email": "sports@siu.edu.in",
+        "phone": "+91 20 2528 1000"
+      }
+    },
+    {
+      "id": "UNIV_102", 
+      "name": "University of Mumbai",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "contact": {
+        "email": "sports@mu.ac.in",
+        "phone": "+91 22 2652 5043"
+      }
+    },
+    {
+      "id": "UNIV_103",
+      "name": "Gujarat University",
+      "city": "Ahmedabad", 
+      "state": "Gujarat",
+      "contact": {
+        "email": "sports@gujaratuniversity.ac.in",
+        "phone": "+91 79 2630 2462"
+      }
+    },
+    {
+      "id": "UNIV_104",
+      "name": "Rajasthan University",
+      "city": "Jaipur",
+      "state": "Rajasthan", 
+      "contact": {
+        "email": "sports@uniraj.ac.in",
+        "phone": "+91 141 270 6503"
+      }
+    }
+  ],
+  "registrations": [
+    {
+      "registrationId": "R2025-0001",
+      "universityId": "UNIV_101",
+      "teamName": "Symbiosis Warriors",
+      "status": "approved",
+      "manager": {
+        "name": "Ravi Kumar",
+        "email": "ravi@siu.edu.in",
+        "phone": "+91 9876543210"
+      },
+      "players": [
+        {
+          "id": "P001",
+          "name": "Priya Sharma",
+          "dob": "2002-05-15",
+          "course": "BCom",
+          "idDocs": [
+            {
+              "type": "Passport",
+              "url": "/uploads/p001_passport.pdf",
+              "status": "verified"
+            }
+          ],
+          "photoUrl": "/uploads/p001_photo.jpg",
+          "role": "singles"
+        },
+        {
+          "id": "P002", 
+          "name": "Anita Patel",
+          "dob": "2001-08-22",
+          "course": "BBA",
+          "idDocs": [
+            {
+              "type": "Aadhar",
+              "url": "/uploads/p002_aadhar.pdf", 
+              "status": "verified"
+            }
+          ],
+          "photoUrl": "/uploads/p002_photo.jpg",
+          "role": "doubles"
+        }
+      ],
+      "travel": {
+        "arrival": "2025-12-14T09:00:00Z",
+        "departure": "2025-12-19T18:00:00Z",
+        "transport": "Flight",
+        "requiresPickup": true
+      },
+      "accommodation": {
+        "required": true,
+        "roomType": "double",
+        "sharing": "team_members",
+        "deposit": 2000
+      },
+      "fees": {
+        "total": 8000,
+        "breakdown": [
+          {"name": "AIU Fee", "amount": 1000},
+          {"name": "Shuttlecock Charges", "amount": 500},
+          {"name": "Officiating Fee", "amount": 300},
+          {"name": "Accommodation", "amount": 4000},
+          {"name": "Food", "amount": 2000},
+          {"name": "Protest Fee", "amount": 200}
+        ]
+      },
+      "paymentStatus": "completed",
+      "submittedAt": "2025-09-15T10:30:00Z",
+      "approvedAt": "2025-09-16T14:20:00Z"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "FIX_001",
+      "matchId": "MATCH_001",
+      "court": "Court 1",
+      "scheduledTime": "2025-12-15T09:00:00Z",
+      "category": "Women's Singles",
+      "round": "Round 1",
+      "teams": [
+        {
+          "universityId": "UNIV_101",
+          "teamName": "Symbiosis Warriors", 
+          "player": "Priya Sharma"
+        },
+        {
+          "universityId": "UNIV_102",
+          "teamName": "Mumbai Tigers",
+          "player": "Neha Singh"
+        }
+      ],
+      "officials": {
+        "umpire": "Mr. Suresh Patel",
+        "serviceJudge": "Ms. Kavita Joshi"
+      },
+      "status": "scheduled"
+    }
+  ],
+  "sponsors": [
+    {
+      "id": "SP001",
+      "name": "YONEX",
+      "tier": "title",
+      "logoUrl": "/uploads/yonex_logo.png",
+      "description": "Official Equipment Partner",
+      "placements": ["home_hero", "match_overlay", "footer"],
+      "contactPerson": {
+        "name": "Amit Sharma",
+        "email": "amit@yonex.com",
+        "phone": "+91 98765 43210"
+      }
+    },
+    {
+      "id": "SP002", 
+      "name": "Decathlon",
+      "tier": "associate",
+      "logoUrl": "/uploads/decathlon_logo.png",
+      "description": "Sports Equipment Sponsor",
+      "placements": ["sidebar", "footer"],
+      "contactPerson": {
+        "name": "Sarah Johnson", 
+        "email": "sarah@decathlon.com",
+        "phone": "+91 87654 32109"
+      }
+    }
+  ],
+  "payments": [
+    {
+      "transactionId": "TXN_001",
+      "registrationId": "R2025-0001",
+      "amount": 8000,
+      "method": "UPI",
+      "status": "completed",
+      "upiId": "manager@paytm",
+      "reference": "PAY123456789",
+      "timestamp": "2025-09-16T11:15:00Z",
+      "receiptUrl": "/receipts/TXN_001.pdf"
+    }
+  ]
+}
