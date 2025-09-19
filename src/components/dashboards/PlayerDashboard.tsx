@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { DocumentUpload, DocumentFile } from '@/components/DocumentUpload';
+import { PlayerInbox, InboxMessage } from '@/components/PlayerInbox';
 import { 
   User, 
   Calendar, 
@@ -20,7 +22,6 @@ import {
   CreditCard,
   LogOut,
   Camera,
-  Download,
   Edit
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,6 +34,8 @@ const PlayerDashboard = () => {
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
+  const [documents, setDocuments] = useState<DocumentFile[]>([]);
+  const [inboxMessages, setInboxMessages] = useState<InboxMessage[]>([]);
 
   useEffect(() => {
     // Mock data for player with extended profile information
@@ -52,10 +55,6 @@ const PlayerDashboard = () => {
         emergencyContact: '+91 9876543210',
         profilePhoto: '/placeholder.svg'
       },
-      documents: [
-        { id: 1, name: 'Student ID Card', type: 'ID', status: 'Verified', uploadDate: '2024-12-01' },
-        { id: 2, name: 'Medical Certificate', type: 'Medical', status: 'Pending', uploadDate: '2024-12-10' }
-      ],
       payments: [
         { id: 1, description: 'Registration Fee', amount: 1500, status: 'Paid', date: '2024-12-01' },
         { id: 2, description: 'Accommodation Fee', amount: 2000, status: 'Pending', date: '2024-12-15' }
@@ -85,20 +84,66 @@ const PlayerDashboard = () => {
           result: 'Won 21-15, 21-18',
           date: '2025-12-14T10:00:00Z'
         }
-      ],
-      announcements: [
-        {
-          title: 'Warm-up session at 7:30 AM',
-          time: '1 hour ago',
-          important: true
-        },
-        {
-          title: 'Lunch venue changed to Block A cafeteria', 
-          time: '3 hours ago',
-          important: false
-        }
       ]
     });
+
+    // Mock documents data
+    setDocuments([
+      { 
+        id: '1', 
+        name: 'Student ID Card.pdf', 
+        type: 'ID Document', 
+        size: 2048576, 
+        status: 'verified', 
+        uploadDate: '2024-12-01T10:00:00Z',
+        downloadUrl: '/downloads/student-id.pdf'
+      },
+      { 
+        id: '2', 
+        name: 'Medical Certificate.pdf', 
+        type: 'Medical', 
+        size: 1536000, 
+        status: 'uploaded', 
+        uploadDate: '2024-12-10T14:30:00Z'
+      }
+    ]);
+
+    // Mock inbox messages
+    setInboxMessages([
+      {
+        id: '1',
+        type: 'payment_reminder',
+        title: 'Payment Reminder - Accommodation Fee',
+        content: 'Dear Player,\n\nThis is a friendly reminder that your accommodation fee payment is still pending. Please complete your payment by December 20th to secure your accommodation.\n\nAmount Due: ₹2,000\nDue Date: December 20, 2024\n\nThank you for your cooperation.',
+        sender: 'Tournament Finance Team',
+        timestamp: '2024-12-15T09:00:00Z',
+        isRead: false,
+        priority: 'high',
+        actionRequired: true,
+        actionText: 'Make Payment',
+        actionUrl: '/payments'
+      },
+      {
+        id: '2',
+        type: 'announcement',
+        title: 'Tournament Schedule Update',
+        content: 'Dear Players,\n\nWe have updated the tournament schedule due to weather conditions. All matches scheduled for December 16th have been moved to December 17th.\n\nPlease check your updated match timings in the matches section.\n\nBest regards,\nTournament Committee',
+        sender: 'Tournament Director',
+        timestamp: '2024-12-14T16:30:00Z',
+        isRead: true,
+        priority: 'medium'
+      },
+      {
+        id: '3',
+        type: 'match_update',
+        title: 'Match Venue Changed',
+        content: 'Your upcoming match against Neha Singh has been moved from Court 1 to Court 3. The timing remains the same.\n\nPlease be at the venue 30 minutes before your match time.\n\nGood luck!',
+        sender: 'Match Coordinator',
+        timestamp: '2024-12-13T11:15:00Z',
+        isRead: true,
+        priority: 'medium'
+      }
+    ]);
   }, [user]);
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,14 +158,47 @@ const PlayerDashboard = () => {
     }
   };
 
-  const handleDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      toast({
-        title: "Documents uploaded",
-        description: `${files.length} document(s) uploaded successfully`,
-      });
+  const handleDocumentUpload = async (files: FileList) => {
+    // Simulate upload process
+    const newDocuments: DocumentFile[] = Array.from(files).map((file, index) => ({
+      id: `doc_${Date.now()}_${index}`,
+      name: file.name,
+      type: 'Document',
+      size: file.size,
+      status: 'uploading' as const,
+      uploadDate: new Date().toISOString()
+    }));
+
+    // Add uploading documents
+    setDocuments(prev => [...prev, ...newDocuments]);
+
+    // Simulate upload completion
+    setTimeout(() => {
+      setDocuments(prev => 
+        prev.map(doc => {
+          const uploadingDoc = newDocuments.find(nd => nd.id === doc.id);
+          return uploadingDoc ? { ...doc, status: 'uploaded' as const } : doc;
+        })
+      );
+    }, 2000);
+  };
+
+  const handleDocumentDelete = (id: string) => {
+    setDocuments(prev => prev.filter(doc => doc.id !== id));
+    toast({
+      title: "Document deleted",
+      description: "Document has been removed successfully",
+    });
+  };
+
+  const handleDocumentDownload = (document: DocumentFile) => {
+    if (document.downloadUrl) {
+      window.open(document.downloadUrl, '_blank');
     }
+    toast({
+      title: "Download started",
+      description: `Downloading ${document.name}`,
+    });
   };
 
   const handleLogout = () => {
@@ -175,7 +253,14 @@ const PlayerDashboard = () => {
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
           <TabsTrigger value="matches">Matches</TabsTrigger>
-          <TabsTrigger value="announcements">Updates</TabsTrigger>
+          <TabsTrigger value="inbox">
+            Inbox
+            {inboxMessages.filter(msg => !msg.isRead).length > 0 && (
+              <Badge variant="destructive" className="ml-2 h-5 w-5 p-0 text-xs">
+                {inboxMessages.filter(msg => !msg.isRead).length}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         {/* Profile Tab */}
@@ -314,72 +399,14 @@ const PlayerDashboard = () => {
 
         {/* Documents Tab */}
         <TabsContent value="documents">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Documents & Verification
-              </CardTitle>
-              <CardDescription>
-                Upload and manage your tournament documents
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Upload Section */}
-              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
-                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold">Upload Documents</h3>
-                  <p className="text-muted-foreground">
-                    Upload student ID, medical certificates, or other required documents
-                  </p>
-                </div>
-                <div className="mt-4">
-                  <Input
-                    id="document-upload"
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                    onChange={handleDocumentUpload}
-                    className="hidden"
-                  />
-                  <Button asChild>
-                    <Label htmlFor="document-upload" className="cursor-pointer">
-                      Choose Files
-                    </Label>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Documents List */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Uploaded Documents</h3>
-                {playerData.documents.map((doc: any) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">{doc.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {doc.type} • Uploaded on {new Date(doc.uploadDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge 
-                        variant={doc.status === 'Verified' ? 'default' : 'secondary'}
-                      >
-                        {doc.status}
-                      </Badge>
-                      <Button variant="ghost" size="sm">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <DocumentUpload
+            documents={documents}
+            onUpload={handleDocumentUpload}
+            onDelete={handleDocumentDelete}
+            onDownload={handleDocumentDownload}
+            maxFileSize={10}
+            acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx']}
+          />
         </TabsContent>
 
         {/* Payments Tab */}
@@ -562,6 +589,36 @@ const PlayerDashboard = () => {
             </CardContent>
           </Card>
         </TabsContent>
+        {/* Inbox Tab */}
+        <TabsContent value="inbox">
+          <PlayerInbox
+            messages={inboxMessages}
+            onMarkAsRead={(messageId) => {
+              setInboxMessages(prev => 
+                prev.map(msg => 
+                  msg.id === messageId ? { ...msg, isRead: true } : msg
+                )
+              );
+            }}
+            onMarkAllAsRead={() => {
+              setInboxMessages(prev => 
+                prev.map(msg => ({ ...msg, isRead: true }))
+              );
+              toast({
+                title: "All messages marked as read",
+                description: "Your inbox has been updated",
+              });
+            }}
+            onDeleteMessage={(messageId) => {
+              setInboxMessages(prev => prev.filter(msg => msg.id !== messageId));
+              toast({
+                title: "Message deleted", 
+                description: "Message has been removed from your inbox",
+              });
+            }}
+          />
+        </TabsContent>
+
       </Tabs>
     </div>
   );

@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { AdminMessaging } from '@/components/AdminMessaging';
+import { AdminManager, AdminUser } from '@/components/AdminManager';
 import { 
   Users, 
   FileCheck, 
@@ -207,10 +209,10 @@ const AdminDashboard = () => {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="messaging">Messaging</TabsTrigger>
+          <TabsTrigger value="admins">Admin Manager</TabsTrigger>
           <TabsTrigger value="registrations">Registrations</TabsTrigger>
           <TabsTrigger value="operations">Operations</TabsTrigger>
-          <TabsTrigger value="system">System</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
         </TabsList>
 
@@ -392,7 +394,33 @@ const AdminDashboard = () => {
           </Card>
         </TabsContent>
 
-        {/* Profile Tab */}
+        {/* Messaging Tab */}
+        <TabsContent value="messaging">
+          <AdminMessaging
+            players={[
+              { id: '1', name: 'John Doe', email: 'john@university.edu', university: 'Mumbai University', paymentStatus: 'pending', documentStatus: 'complete' },
+              { id: '2', name: 'Jane Smith', email: 'jane@university.edu', university: 'Delhi University', paymentStatus: 'paid', documentStatus: 'incomplete' }
+            ]}
+            onSendMessage={async (message) => {
+              // This would typically call your backend API
+              console.log('Sending message:', message);
+            }}
+          />
+        </TabsContent>
+
+        {/* Admin Manager Tab */}
+        <TabsContent value="admins">
+          <AdminManager
+            admins={[
+              { id: '1', name: 'Admin User', email: 'admin@tournament.com', role: 'super_admin', status: 'active', permissions: ['all'], lastLogin: '2024-12-19T10:00:00Z', createdAt: '2024-01-01T00:00:00Z' }
+            ]}
+            currentUserId="1"
+            onCreateAdmin={async (admin) => console.log('Create admin:', admin)}
+            onUpdateAdmin={async (id, updates) => console.log('Update admin:', id, updates)}
+            onDeleteAdmin={async (id) => console.log('Delete admin:', id)}
+            onToggleStatus={async (id, status) => console.log('Toggle status:', id, status)}
+          />
+        </TabsContent>
         <TabsContent value="profile" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Profile Photo Section */}
