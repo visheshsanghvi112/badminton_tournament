@@ -4,8 +4,11 @@ import { AuthService, AuthToken, User } from '@/lib/auth';
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string; isNewUser?: boolean }>;
+  signup: (email: string, password: string, userData: { name: string; role: 'admin' | 'player' | 'sponsor' | 'observer' | 'volunteer'; universityId?: string; phone?: string }) => Promise<{ success: boolean; error?: string }>;
+  sendPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -24,61 +27,102 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing auth on mount
-    const auth = AuthService.getStoredAuth();
-    if (auth) {
-      setUser(auth.user);
+    // Set up Firebase auth state listener
+    const unsubscribe = AuthService.onAuthStateChange((user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    // Check for existing stored auth on mount
+    const storedAuth = AuthService.getStoredAuth();
+    if (storedAuth && !user) {
+      setUser(storedAuth.user);
     }
-    setLoading(false);
+    
+    if (!storedAuth) {
+      setLoading(false);
+    }
+
+    return () => unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      // Mock login - simulate different users based on email
-      let mockUser: User;
-      
-      if (email.includes('admin')) {
-        mockUser = {
-          id: 'ADMIN_001',
-          role: 'admin',
-          name: 'Admin User',
-          email,
-        };
-      } else {
-        mockUser = {
-          id: 'PLAYER_001',
-          role: 'player',
-          name: 'Player User',
-          universityId: 'UNIV_101',
-          email,
-          phone: '+91 9876543210',
-        };
+      const result = await AuthService.signInWithEmail(email, password);
+      if (result.success && result.user) {
+        setUser(result.user);
       }
-
-      const authToken: AuthToken = {
-        token: `mock.jwt.${mockUser.role}.${Date.now()}`,
-        user: mockUser,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
-      };
-
-      AuthService.setAuth(authToken);
-      setUser(mockUser);
-      return true;
-    } catch (error) {
+      return result;
+    } catch (error: any) {
       console.error('Login failed:', error);
-      return false;
+      return { success: false, error: error.message };
     }
   };
 
-  const logout = () => {
-    AuthService.clearAuth();
-    setUser(null);
+  const loginWithGoogle = async (): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
+    try {
+      const result = await AuthService.signInWithGoogle();
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } catch (error: any) {
+      console.error('Google login failed:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const signup = async (
+    email: string, 
+    password: string, 
+    userData: { name: string; role: 'admin' | 'player' | 'sponsor' | 'observer' | 'volunteer'; universityId?: string; phone?: string }
+  ): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const result = await AuthService.signUpWithEmail(email, password, {
+        email,
+        name: userData.name,
+        role: userData.role,
+        universityId: userData.universityId,
+        phone: userData.phone
+      });
+      
+      if (result.success && result.user) {
+        setUser(result.user);
+      }
+      return result;
+    } catch (error: any) {
+      console.error('Signup failed:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const sendPasswordReset = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      return await AuthService.sendPasswordReset(email);
+    } catch (error: any) {
+      console.error('Password reset failed:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    try {
+      await AuthService.signOutUser();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still clear local state even if Firebase logout fails
+      setUser(null);
+    }
   };
 
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
     login,
+    loginWithGoogle,
+    signup,
+    sendPasswordReset,
     logout,
     loading,
   };

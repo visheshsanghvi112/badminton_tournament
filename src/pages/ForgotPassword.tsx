@@ -1,89 +1,92 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, ArrowLeft, Check, Copy } from 'lucide-react';
+import { Mail, ArrowLeft, Check, AlertCircle, Loader2 } from 'lucide-react';
+import symbiosisLogo from "@/assets/symbiosis-logo.png";
 
 const ForgotPassword = () => {
+  const { sendPasswordReset, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
-  const [step, setStep] = useState<'email' | 'sent' | 'otp' | 'reset'>('email');
+  const [isEmailSent, setIsEmailSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  // Mock reset token for dev mode
-  const mockResetToken = 'RESET_TOKEN_DEV_12345';
-  const mockOTP = '123456';
+  const [error, setError] = useState('');
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setLoading(false);
-    setStep('sent');
-    
-    toast({
-      title: "Reset Instructions Sent",
-      description: "Check your email for reset instructions.",
-    });
-  };
-
-  const handleOTPVerify = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (otp === mockOTP) {
-      setStep('reset');
+    try {
+      const result = await sendPasswordReset(email);
+      
+      if (result.success) {
+        setIsEmailSent(true);
+        toast({
+          title: "Reset Email Sent",
+          description: "Check your email for password reset instructions.",
+        });
+      } else {
+        setError(result.error || 'Failed to send reset email');
+        toast({
+          title: "Reset Failed",
+          description: result.error || "Failed to send reset email. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
       toast({
-        title: "OTP Verified",
-        description: "You can now set a new password.",
-      });
-    } else {
-      toast({
-        title: "Invalid OTP",
-        description: "Please enter the correct OTP.",
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePasswordReset = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (newPassword !== confirmPassword) {
+  const handleResendEmail = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const result = await sendPasswordReset(email);
+      
+      if (result.success) {
+        toast({
+          title: "Email Resent",
+          description: "Password reset email has been sent again.",
+        });
+      } else {
+        setError(result.error || 'Failed to resend email');
+        toast({
+          title: "Resend Failed",
+          description: result.error || "Failed to resend email. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
       toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match.",
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    toast({
-      title: "Password Reset Successful",
-      description: "Your password has been updated. You can now login.",
-    });
-    
-    // Redirect to login after successful reset
-    setTimeout(() => {
-      window.location.href = '/login';
-    }, 2000);
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied to clipboard",
-      description: `${text} copied to clipboard`,
-    });
   };
 
   return (
@@ -91,23 +94,27 @@ const ForgotPassword = () => {
       <div className="w-full max-w-md">
         <Card className="shadow-tournament">
           <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <img 
+                src={symbiosisLogo} 
+                alt="Symbiosis International University"
+                className="h-16 w-16"
+              />
+            </div>
             <CardTitle className="text-2xl flex items-center justify-center gap-2">
               <Mail className="h-6 w-6" />
-              {step === 'email' && 'Forgot Password'}
-              {step === 'sent' && 'Check Your Email'}
-              {step === 'otp' && 'Enter OTP'}
-              {step === 'reset' && 'Reset Password'}
+              {isEmailSent ? 'Check Your Email' : 'Reset Password'}
             </CardTitle>
             <CardDescription>
-              {step === 'email' && 'Enter your email to receive reset instructions'}
-              {step === 'sent' && 'We sent you reset instructions'}
-              {step === 'otp' && 'Enter the verification code'}
-              {step === 'reset' && 'Create your new password'}
+              {isEmailSent 
+                ? 'We sent you password reset instructions'
+                : 'Enter your email to receive reset instructions'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {step === 'email' && (
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
+            {!isEmailSent ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
                   <Input
@@ -121,112 +128,73 @@ const ForgotPassword = () => {
                   />
                 </div>
 
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Sending...' : 'Send Reset Instructions'}
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Reset Instructions'
+                  )}
                 </Button>
               </form>
-            )}
-
-            {step === 'sent' && (
+            ) : (
               <div className="space-y-6">
                 <Alert>
                   <Check className="h-4 w-4" />
                   <AlertDescription>
-                    Reset instructions sent to {email}
+                    Password reset instructions sent to <strong>{email}</strong>
                   </AlertDescription>
                 </Alert>
 
                 <div className="space-y-4">
                   <div className="bg-muted/50 rounded-lg p-4">
-                    <h4 className="font-semibold mb-2">Development Mode Options:</h4>
-                    
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-2">Simulate Email Link:</p>
-                        <div className="flex items-center gap-2 p-2 bg-background rounded border">
-                          <span className="text-xs font-mono flex-1">{mockResetToken}</span>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => copyToClipboard(mockResetToken)}
-                          >
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-2">Or use OTP verification:</p>
-                        <Button 
-                          variant="outline" 
-                          className="w-full"
-                          onClick={() => setStep('otp')}
-                        >
-                          Enter OTP Code
-                        </Button>
-                      </div>
-                    </div>
+                    <h4 className="font-semibold mb-2">What's next?</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Check your email inbox (and spam folder)</li>
+                      <li>• Click the reset link in the email</li>
+                      <li>• Follow the instructions to create a new password</li>
+                      <li>• Return to login with your new password</li>
+                    </ul>
                   </div>
+
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Didn't receive the email?
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleResendEmail}
+                      disabled={loading}
+                      className="w-full"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Resending...
+                        </>
+                      ) : (
+                        'Resend Email'
+                      )}
+                    </Button>
+                  </div>
+
+                  {error && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
                 </div>
               </div>
-            )}
-
-            {step === 'otp' && (
-              <form onSubmit={handleOTPVerify} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="otp">Verification Code</Label>
-                  <Input
-                    id="otp"
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter 6-digit code"
-                    maxLength={6}
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Demo OTP: <code className="bg-muted px-1 rounded">{mockOTP}</code>
-                  </p>
-                </div>
-
-                <Button type="submit" className="w-full">
-                  Verify OTP
-                </Button>
-              </form>
-            )}
-
-            {step === 'reset' && (
-              <form onSubmit={handlePasswordReset} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
-                    required
-                    minLength={6}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
-                    required
-                    minLength={6}
-                  />
-                </div>
-
-                <Button type="submit" className="w-full">
-                  Update Password
-                </Button>
-              </form>
             )}
 
             <div className="mt-6 text-center">
@@ -238,6 +206,17 @@ const ForgotPassword = () => {
                 Back to Login
               </Link>
             </div>
+
+            {!isEmailSent && (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Remember your password?{' '}
+                  <Link to="/login" className="text-primary hover:underline">
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

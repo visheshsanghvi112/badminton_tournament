@@ -201,13 +201,22 @@ const PlayerDashboard = () => {
     });
   };
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out",
-    });
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out",
+      });
+      navigate('/login');
+    } catch (error) {
+      toast({
+        title: "Logout Error",
+        description: "There was an issue logging out, but you've been signed out locally.",
+        variant: "destructive"
+      });
+      navigate('/login');
+    }
   };
 
   const handleProfileUpdate = () => {
@@ -558,37 +567,7 @@ const PlayerDashboard = () => {
           </Card>
         </TabsContent>
 
-        {/* Announcements Tab */}
-        <TabsContent value="announcements">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Tournament Updates & Announcements
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {playerData.announcements.map((announcement: any, index: number) => (
-                  <div 
-                    key={index} 
-                    className={`p-4 border rounded-lg ${
-                      announcement.important ? 'border-orange-200 bg-orange-50 dark:bg-orange-950/20' : ''
-                    }`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium">{announcement.title}</h4>
-                      {announcement.important && (
-                        <Badge variant="destructive" className="text-xs">Important</Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground">{announcement.time}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
         {/* Inbox Tab */}
         <TabsContent value="inbox">
           <PlayerInbox
