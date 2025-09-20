@@ -1,4 +1,13 @@
-import { User as FirebaseUser } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser
+} from 'firebase/auth';
 
 export interface User {
   id: string;
@@ -43,17 +52,6 @@ export const ADMIN_ROLES = {
   MEDIA_MANAGER: 'mediaManager',
   VOLUNTEER_COORDINATOR: 'volunteerCoordinator'
 } as const;
-
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  signOut,
-  onAuthStateChanged,
-  User as FirebaseUser
-} from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { authLogger } from './logger';
@@ -65,15 +63,15 @@ export class AuthService {
     try {
       const stored = localStorage.getItem(AUTH_STORAGE_KEY);
       if (!stored) return null;
-      
+
       const auth = JSON.parse(stored);
-      
+
       // Check if token is expired
       if (new Date(auth.expiresAt) < new Date()) {
         this.clearAuth();
         return null;
       }
-      
+
       return auth;
     } catch {
       return null;
@@ -121,10 +119,10 @@ export class AuthService {
       authLogger.info('Attempting email sign in', { email });
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
-      
+
       // Get user profile from Firestore
       const userProfile = await this.getUserProfile(firebaseUser.uid);
-      
+
       if (!userProfile) {
         authLogger.error('User profile not found after sign in', { uid: firebaseUser.uid });
         return { success: false, error: 'User profile not found' };
@@ -157,15 +155,15 @@ export class AuthService {
   }
 
   static async signUpWithEmail(
-    email: string, 
-    password: string, 
+    email: string,
+    password: string,
     userData: Omit<UserProfile, 'uid' | 'createdAt' | 'updatedAt'>
   ): Promise<{ success: boolean; user?: User; error?: string }> {
     try {
       authLogger.info('Attempting email sign up', { email, role: userData.role });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
-      
+
       // Create user profile in Firestore (filter out undefined values)
       const userProfile: any = {
         uid: firebaseUser.uid,
@@ -228,7 +226,7 @@ export class AuthService {
     try {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
-      
+
       if (docSnap.exists()) {
         return docSnap.data() as UserProfile;
       }
@@ -236,7 +234,7 @@ export class AuthService {
       return null;
     } catch (error: any) {
       authLogger.error('Error getting user profile', { uid, error: error.message, code: error.code });
-      
+
       // If it's a permissions error, we might need to set up Firestore rules
       if (error.code === 'permission-denied') {
         authLogger.warn('Firestore permission denied. Please set up security rules in Firebase Console.');
@@ -267,17 +265,17 @@ export class AuthService {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
-      
+
       // Check if user profile exists
       let userProfile = await this.getUserProfile(firebaseUser.uid);
       let isNewUser = false;
-      
+
       if (!userProfile) {
         // Create new user profile for Google sign-in
         isNewUser = true;
-        authLogger.info('Creating new user profile for Google sign in', { 
-          uid: firebaseUser.uid, 
-          email: firebaseUser.email 
+        authLogger.info('Creating new user profile for Google sign in', {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email
         });
         userProfile = {
           uid: firebaseUser.uid,
@@ -287,7 +285,7 @@ export class AuthService {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
-        
+
         await setDoc(doc(db, 'users', firebaseUser.uid), userProfile);
       }
 
@@ -309,10 +307,10 @@ export class AuthService {
       };
 
       this.setAuth(authToken);
-      authLogger.info('Google sign in successful', { 
-        userId: user.id, 
-        role: user.role, 
-        isNewUser 
+      authLogger.info('Google sign in successful', {
+        userId: user.id,
+        role: user.role,
+        isNewUser
       });
       return { success: true, user, isNewUser };
     } catch (error: any) {
@@ -328,14 +326,14 @@ export class AuthService {
       authLogger.info('Password reset email sent successfully', { email });
       return { success: true };
     } catch (error: any) {
-      authLogger.error('Password reset failed', { 
-        email, 
-        error: error.message, 
-        code: error.code 
+      authLogger.error('Password reset failed', {
+        email,
+        error: error.message,
+        code: error.code
       });
-      
+
       let errorMessage = 'Failed to send password reset email.';
-      
+
       switch (error.code) {
         case 'auth/user-not-found':
           errorMessage = 'No account found with this email address.';
@@ -358,7 +356,7 @@ export class AuthService {
         default:
           errorMessage = `Firebase error: ${error.message}`;
       }
-      
+
       return { success: false, error: errorMessage };
     }
   }
