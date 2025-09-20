@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/guards/PrivateRoute";
 import Layout from "./components/layout/Layout";
@@ -19,6 +19,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import LogViewer from "./components/dev/LogViewer";
+import UserDebugger from "./components/dev/UserDebugger";
 
 const queryClient = new QueryClient();
 
@@ -45,9 +46,19 @@ const App = () => (
                 <Dashboard />
               </PrivateRoute>
             } />
+            
+            {/* Convenience redirects for common role-based URLs */}
+            <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/manager" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/player" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/super-admin" element={<Navigate to="/dashboard" replace />} />
+            
             {/* Development only routes */}
             {import.meta.env.DEV && (
-              <Route path="/dev/logs" element={<LogViewer />} />
+              <>
+                <Route path="/dev/logs" element={<LogViewer />} />
+                <Route path="/dev/user" element={<UserDebugger />} />
+              </>
             )}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

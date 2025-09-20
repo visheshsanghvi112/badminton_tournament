@@ -36,6 +36,7 @@ interface PlayerInboxProps {
   onMarkAsRead: (messageId: string) => void;
   onMarkAllAsRead: () => void;
   onDeleteMessage: (messageId: string) => void;
+  onClearAll?: () => void;
   onActionClick?: (message: InboxMessage) => void;
 }
 
@@ -44,6 +45,7 @@ export const PlayerInbox = ({
   onMarkAsRead, 
   onMarkAllAsRead, 
   onDeleteMessage,
+  onClearAll,
   onActionClick 
 }: PlayerInboxProps) => {
   const [selectedMessage, setSelectedMessage] = useState<InboxMessage | null>(null);
@@ -108,12 +110,12 @@ export const PlayerInbox = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
-      {/* Message List */}
-      <Card className="lg:col-span-1">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+    <div className="space-y-4">
+      {/* Mobile/Desktop Inbox Header */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Mail className="h-5 w-5" />
               Inbox
               {unreadCount > 0 && (
@@ -122,137 +124,167 @@ export const PlayerInbox = ({
                 </Badge>
               )}
             </CardTitle>
-            {unreadCount > 0 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onMarkAllAsRead}
-              >
-                Mark all read
-              </Button>
-            )}
+            <div className="flex flex-col sm:flex-row gap-2">
+              {unreadCount > 0 && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={onMarkAllAsRead}
+                  className="w-full sm:w-auto"
+                >
+                  Mark all read
+                </Button>
+              )}
+              {messages.length > 0 && onClearAll && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onClearAll}
+                  className="w-full sm:w-auto text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  Clear All
+                </Button>
+              )}
+            </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <ScrollArea className="h-[480px]">
-            {messages.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No messages yet</p>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`p-4 cursor-pointer hover:bg-muted/50 border-l-4 ${getPriorityColor(message.priority)} ${
-                      selectedMessage?.id === message.id ? 'bg-muted' : ''
-                    } ${!message.isRead ? 'bg-blue-50 dark:bg-blue-950/20' : ''}`}
-                    onClick={() => handleMessageClick(message)}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-2">
-                        {getTypeIcon(message.type)}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            {!message.isRead ? (
-                              <Mail className="h-3 w-3 text-blue-500" />
-                            ) : (
-                              <MailOpen className="h-3 w-3 text-muted-foreground" />
-                            )}
-                            <p className={`font-medium text-sm truncate ${!message.isRead ? 'font-semibold' : ''}`}>
-                              {message.title}
+      </Card>
+      
+      {/* Messages Layout - Mobile: Single column, Desktop: Two columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        {/* Message List */}
+        <Card className="h-[400px] lg:h-[500px]">
+          <CardContent className="p-0">
+            <ScrollArea className="h-full">
+              {messages.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-sm">No messages yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">Your inbox is empty</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`p-3 sm:p-4 cursor-pointer hover:bg-muted/50 border-l-4 ${getPriorityColor(message.priority)} ${
+                        selectedMessage?.id === message.id ? 'bg-muted' : ''
+                      } ${!message.isRead ? 'bg-blue-50 dark:bg-blue-950/20' : ''}`}
+                      onClick={() => handleMessageClick(message)}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                          {getTypeIcon(message.type)}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              {!message.isRead ? (
+                                <Mail className="h-3 w-3 text-blue-500 flex-shrink-0" />
+                              ) : (
+                                <MailOpen className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                              )}
+                              <p className={`font-medium text-xs sm:text-sm truncate ${!message.isRead ? 'font-semibold' : ''}`}>
+                                {message.title}
+                              </p>
+                            </div>
+                            <p className="text-xs text-muted-foreground truncate mt-1">
+                              {message.content}
                             </p>
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate mt-1">
-                            {message.content}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-xs text-muted-foreground">
-                              {message.sender}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {formatRelativeTime(message.timestamp)}
-                            </span>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="text-xs text-muted-foreground truncate">
+                                {message.sender}
+                              </span>
+                              <span className="text-xs text-muted-foreground flex-shrink-0">
+                                {formatRelativeTime(message.timestamp)}
+                              </span>
+                            </div>
                           </div>
                         </div>
+                        <div className="flex items-center gap-1">
+                          {message.priority === 'high' && (
+                            <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteMessage(message.id);
+                            }}
+                            className="h-6 w-6 p-0 text-muted-foreground hover:text-red-600"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
-                      {message.priority === 'high' && (
-                        <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
-                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        {/* Message Detail */}
+        <Card className="h-[400px] lg:h-[500px]">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center justify-between">
+              {selectedMessage ? (
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  {getTypeIcon(selectedMessage.type)}
+                  <span className="text-base sm:text-lg truncate">{selectedMessage.title}</span>
+                  {selectedMessage.priority === 'high' && (
+                    <Badge variant="destructive" className="text-xs">High Priority</Badge>
+                  )}
+                </div>
+              ) : (
+                <span className="text-base sm:text-lg">Select a message</span>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="h-[calc(100%-5rem)] overflow-y-auto">
+            {selectedMessage ? (
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">From: {selectedMessage.sender}</span>
+                  </div>
+                  <span className="text-xs sm:text-sm">{new Date(selectedMessage.timestamp).toLocaleString()}</span>
+                </div>
+                <Separator />
+                <div className="prose prose-sm max-w-none">
+                  <p className="whitespace-pre-wrap text-sm">{selectedMessage.content}</p>
+                </div>
+                {selectedMessage.actionRequired && (
+                  <div className="bg-muted p-3 sm:p-4 rounded-lg">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">Action Required</p>
+                        <p className="text-xs text-muted-foreground">
+                          This message requires your attention
+                        </p>
+                      </div>
+                      <Button 
+                        onClick={() => handleActionClick(selectedMessage)}
+                        size="sm"
+                        className="w-full sm:w-auto"
+                      >
+                        {selectedMessage.actionText || 'Take Action'}
+                      </Button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        </CardContent>
-      </Card>
-
-      {/* Message Detail */}
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            {selectedMessage ? (
-              <div className="flex items-center gap-2">
-                {getTypeIcon(selectedMessage.type)}
-                <span className="text-lg">{selectedMessage.title}</span>
-                {selectedMessage.priority === 'high' && (
-                  <Badge variant="destructive">High Priority</Badge>
                 )}
               </div>
             ) : (
-              <span>Select a message</span>
-            )}
-            {selectedMessage && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDeleteMessage(selectedMessage.id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {selectedMessage ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>From: {selectedMessage.sender}</span>
-                </div>
-                <span>{new Date(selectedMessage.timestamp).toLocaleString()}</span>
+              <div className="text-center py-12 text-muted-foreground">
+                <Mail className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <p className="text-sm">Select a message to read</p>
+                <p className="text-xs text-muted-foreground mt-1">Choose a message from the list to view its details</p>
               </div>
-              <Separator />
-              <div className="prose prose-sm max-w-none">
-                <p className="whitespace-pre-wrap">{selectedMessage.content}</p>
-              </div>
-              {selectedMessage.actionRequired && (
-                <div className="bg-muted p-4 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Action Required</p>
-                      <p className="text-sm text-muted-foreground">
-                        This message requires your attention
-                      </p>
-                    </div>
-                    <Button onClick={() => handleActionClick(selectedMessage)}>
-                      {selectedMessage.actionText || 'Take Action'}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              <Mail className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <p>Select a message to read</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

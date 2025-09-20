@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AuthService, AuthToken, User } from '@/lib/auth';
+import { isSuperAdminEmail, initializeSuperAdmin } from '@/lib/superAdminSetup';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string; isNewUser?: boolean }>;
-  signup: (email: string, password: string, userData: { name: string; role: 'admin' | 'player' | 'sponsor' | 'observer' | 'volunteer'; universityId?: string; phone?: string }) => Promise<{ success: boolean; error?: string }>;
+  signup: (email: string, password: string, userData: { name: string; role: 'admin' | 'manager' | 'player'; universityId?: string; phone?: string }) => Promise<{ success: boolean; error?: string }>;
   sendPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   loading: boolean;
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signup = async (
     email: string, 
     password: string, 
-    userData: { name: string; role: 'admin' | 'player' | 'sponsor' | 'observer' | 'volunteer'; universityId?: string; phone?: string }
+    userData: { name: string; role: 'admin' | 'manager' | 'player'; universityId?: string; phone?: string }
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const result = await AuthService.signUpWithEmail(email, password, {

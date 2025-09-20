@@ -1,0 +1,175 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions for role checking
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+    
+    function hasRoleLevel(requiredRole) {
+      return isAuthenticated() && (
+        (requiredRole == 'player' && getUserData().role in ['superAdmin', 'admin', 'manager', 'player']) ||
+        (requiredRole == 'manager' && getUserData().role in ['superAdmin', 'admin', 'manager']) ||
+        (requiredRole == 'admin' && getUserData().role in ['superAdmin', 'admin']) ||
+        (requiredRole == 'superAdmin' && getUserData().role == 'superAdmin')
+      );
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isTeamManager(teamId) {
+      return isAuthenticated() && getUserData().role == 'manager' && getUserData().teamId == teamId;
+    }
+    
+    function isPlayerInTeam(teamId) {
+      return isAuthenticated() && getUserData().role == 'player' && getUserData().teamId == teamId;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own data
+      allow read: if isOwner(userId);
+      
+      // Super admins can read all users
+      allow read: if hasRole('superAdmin');
+      
+      // Admins can read all users
+      allow read: if hasRole('admin');
+      
+      // Managers can read players in their team
+      allow read: if hasRole('manager') && (
+        resource.data.role == 'player' && resource.data.teamId == getUserData().teamId
+      );
+      
+      // Players can read managers of their team
+      allow read: if hasRole('player') && (
+        resource.data.role == 'manager' && resource.data.teamId == getUserData().teamId
+      );
+      
+      // Users can create their own profile during registration
+      allow create: if isOwner(userId) && 
+        request.resource.data.role in ['manager', 'player'] &&
+        request.resource.data.uid == userId;
+      
+      // Super admins can create admin users
+      allow create: if hasRole('superAdmin') && 
+        request.resource.data.role == 'admin';
+      
+      // Users can update their own profile
+      allow update: if isOwner(userId) && 
+        request.resource.data.role == getUserData().role;
+      
+      // Super admins can update any user
+      allow update: if hasRole('superAdmin');
+      
+      // Admins can update player and manager profiles
+      allow update: if hasRole('admin') && 
+        resource.data.role in ['player', 'manager'];
+      
+      // Managers can update players in their team
+      allow update: if hasRole('manager') && 
+        resource.data.role == 'player' && 
+        resource.data.teamId == getUserData().teamId;
+      
+      // Super admins can delete users
+      allow delete: if hasRole('superAdmin');
+    }
+
+    // Teams collection
+    match /teams/{teamId} {
+      // Super admins can read all teams
+      allow read: if hasRole('superAdmin');
+      
+      // Admins can read all teams
+      allow read: if hasRole('admin');
+      
+      // Managers can read their own team
+      allow read: if isTeamManager(teamId);
+      
+      // Players can read their team
+      allow read: if isPlayerInTeam(teamId);
+      
+      // Managers can create teams
+      allow create: if hasRole('manager') && 
+        request.resource.data.managerUID == request.auth.uid;
+      
+      // Super admins can create teams
+      allow create: if hasRole('superAdmin');
+      
+      // Team managers can update their team
+      allow update: if isTeamManager(teamId);
+      
+      // Super admins can update any team
+      allow update: if hasRole('superAdmin');
+      
+      // Admins can update teams
+      allow update: if hasRole('admin');
+      
+      // Super admins can delete teams
+      allow delete: if hasRole('superAdmin');
+    }
+
+    // Payments collection
+    match /payments/{playerUID} {
+      // Players can read their own payment
+      allow read: if isOwner(playerUID);
+      
+      // Super admins can read all payments
+      allow read: if hasRole('superAdmin');
+      
+      // Admins can read all payments
+      allow read: if hasRole('admin');
+      
+      // Managers can read payments of players in their team
+      allow read: if hasRole('manager') && 
+        getUserData().teamId != null &&
+        exists(/databases/$(database)/documents/users/$(playerUID)) &&
+        get(/databases/$(database)/documents/users/$(playerUID)).data.teamId == getUserData().teamId;
+      
+      // Players can create their own payment record
+      allow create: if isOwner(playerUID) && 
+        request.resource.data.playerUID == playerUID &&
+        request.resource.data.status == 'pending';
+      
+      // Super admins can create payment records
+      allow create: if hasRole('superAdmin');
+      
+      // Admins can create payment records
+      allow create: if hasRole('admin');
+      
+      // Players can update their own payment status (for payment confirmation)
+      allow update: if isOwner(playerUID) && 
+        request.resource.data.status == 'paid';
+      
+      // Super admins can update any payment
+      allow update: if hasRole('superAdmin');
+      
+      // Admins can update payments
+      allow update: if hasRole('admin');
+      
+      // Managers can update payments of players in their team
+      allow update: if hasRole('manager') && 
+        getUserData().teamId != null &&
+        exists(/databases/$(database)/documents/users/$(playerUID)) &&
+        get(/databases/$(database)/documents/users/$(playerUID)).data.teamId == getUserData().teamId;
+      
+      // Super admins can delete payments
+      allow delete: if hasRole('superAdmin');
+    }
+
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

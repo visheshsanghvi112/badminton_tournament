@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { Eye, EyeOff, LogIn, Loader2, Shield } from 'lucide-react';
 import symbiosisLogo from "@/assets/symbiosis-logo.png";
 
 const Login = () => {
   const { login, loginWithGoogle, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const location = useLocation();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -33,26 +33,28 @@ const Login = () => {
 
     try {
       const result = await login(formData.email, formData.password);
-      
+
       if (result.success) {
         toast({
-          title: "Login Successful",
-          description: "Welcome back to the tournament platform.",
+          title: "Welcome Back! 🎉",
+          description: `Successfully signed in as ${result.user?.name || 'User'}. Redirecting to your dashboard...`,
+          className: "border-emerald-200 bg-emerald-50 text-emerald-800"
         });
+        // Don't set loading to false here - let the redirect happen
       } else {
         toast({
-          title: "Login Failed",
-          description: result.error || "Invalid email or password. Please try again.",
+          title: "Sign In Failed",
+          description: result.error || "Please check your credentials and try again.",
           variant: "destructive"
         });
+        setLoading(false);
       }
     } catch (error) {
       toast({
-        title: "Login Error",
-        description: "An error occurred during login. Please try again.",
+        title: "Connection Error",
+        description: "Unable to connect to the server. Please check your internet connection and try again.",
         variant: "destructive"
       });
-    } finally {
       setLoading(false);
     }
   };
@@ -65,28 +67,32 @@ const Login = () => {
     setLoading(true);
     try {
       const result = await loginWithGoogle();
-      
+
       if (result.success) {
+        const welcomeMessage = result.isNewUser
+          ? `Welcome to the tournament platform, ${result.user?.name || 'User'}! Your account has been created successfully.`
+          : `Welcome back, ${result.user?.name || 'User'}! Redirecting to your dashboard...`;
+
         toast({
-          title: result.isNewUser ? "Account Created" : "Login Successful",
-          description: result.isNewUser 
-            ? "Welcome! Your account has been created with Google." 
-            : "Welcome back to the tournament platform.",
+          title: result.isNewUser ? "Account Created Successfully! 🎉" : "Welcome Back! 🎉",
+          description: welcomeMessage,
+          className: "border-emerald-200 bg-emerald-50 text-emerald-800"
         });
+        // Don't set loading to false here - let the redirect happen
       } else {
         toast({
           title: "Google Sign-In Failed",
-          description: result.error || "Failed to sign in with Google. Please try again.",
+          description: result.error || "Unable to sign in with Google. Please try again or use email sign-in.",
           variant: "destructive"
         });
+        setLoading(false);
       }
     } catch (error) {
       toast({
-        title: "Sign-In Error",
-        description: "An error occurred during Google sign-in. Please try again.",
+        title: "Connection Error",
+        description: "Unable to connect to Google services. Please check your internet connection and try again.",
         variant: "destructive"
       });
-    } finally {
       setLoading(false);
     }
   };
@@ -96,91 +102,121 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-hero p-4">
       <div className="w-full max-w-md">
-        <Card className="shadow-tournament">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <img 
-                src={symbiosisLogo} 
-                alt="Symbiosis International University"
-                className="h-16 w-16"
-              />
+        <Card className="shadow-tournament border-0 bg-card/95 backdrop-blur-sm">
+          <CardHeader className="text-center pb-8 pt-8">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <img
+                  src={symbiosisLogo}
+                  alt="Symbiosis International University"
+                  className="h-20 w-20 drop-shadow-lg"
+                />
+                <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
+                  <Shield className="h-3 w-3 text-primary-foreground" />
+                </div>
+              </div>
             </div>
-            <CardTitle className="text-2xl flex items-center justify-center gap-2">
-              <LogIn className="h-6 w-6" />
-              Tournament Portal Login
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+              Tournament Portal
             </CardTitle>
-            <CardDescription>
-              Enter your credentials to access your dashboard
+            <CardDescription className="text-muted-foreground text-base font-medium">
+              Symbiosis International University
+            </CardDescription>
+            <CardDescription className="text-muted-foreground/80 text-sm mt-1">
+              Secure access to your academic tournament dashboard
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+          <CardContent className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-3">
+                <Label htmlFor="email" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <div className="w-1 h-4 bg-primary rounded-full"></div>
+                  University Email Address
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  placeholder="your.email@university.edu"
+                  placeholder="student.name@university.edu"
                   required
                   disabled={loading}
+                  autoComplete="email"
+                  className="h-12 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-base"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div className="space-y-3">
+                <Label htmlFor="password" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <div className="w-1 h-4 bg-primary rounded-full"></div>
+                  Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={(e) => handleChange('password', e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="Enter your secure password"
                     required
                     disabled={loading}
-                    className="pr-10"
+                    autoComplete="current-password"
+                    className="h-12 pr-12 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-base"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-muted transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={loading}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-4 w-4 text-muted-foreground" />
                     )}
                   </Button>
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing In...' : 'Sign In'}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-base"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-5 w-5" />
+                    Sign In Securely
+                  </>
+                )}
               </Button>
             </form>
 
-            <div className="relative">
+            <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
+                <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                <span className="bg-card px-4 text-muted-foreground font-semibold tracking-wider">
+                  Alternative Sign-In
                 </span>
               </div>
             </div>
 
-            <Button 
-              variant="outline" 
-              className="w-full" 
+            <Button
+              variant="outline"
+              className="w-full h-12 border-border hover:bg-muted hover:border-border/80 transition-all duration-200 font-medium text-base"
               onClick={handleGoogleSignIn}
               disabled={loading}
             >
-              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+              <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                   fill="#4285F4"
@@ -198,25 +234,39 @@ const Login = () => {
                   fill="#EA4335"
                 />
               </svg>
-              {loading ? 'Signing In...' : 'Continue with Google'}
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Authenticating...
+                </>
+              ) : (
+                'Continue with Google Workspace'
+              )}
             </Button>
 
-            <div className="mt-6 text-center">
-              <Link 
-                to="/forgot-password" 
-                className="text-sm text-primary hover:underline"
+            <div className="mt-8 text-center space-y-4">
+              <Link
+                to="/forgot-password"
+                className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium hover:underline transition-colors"
               >
+                <Shield className="mr-1 h-3 w-3" />
                 Forgot your password?
               </Link>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <Link to="/register" className="text-primary hover:underline">
-                  Create account
-                </Link>
-              </p>
+
+              <div className="pt-4 border-t border-border/50">
+                <p className="text-sm text-muted-foreground">
+                  New to the tournament platform?{' '}
+                  <Link to="/register" className="text-primary hover:text-primary/80 font-semibold hover:underline transition-colors">
+                    Create your account
+                  </Link>
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <p className="text-xs text-muted-foreground/80">
+                  Protected by university-grade security protocols
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
