@@ -8,14 +8,14 @@ import { getStorage } from "firebase/storage";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDVfc8f-XOPPq8pnn7JK8Vb0ABNCwo1T40",
-  authDomain: "badminton-eee34.firebaseapp.com",
-  databaseURL: "https://badminton-eee34-default-rtdb.firebaseio.com",
-  projectId: "badminton-eee34",
-  storageBucket: "badminton-eee34.firebasestorage.app",
-  messagingSenderId: "871432686449",
-  appId: "1:871432686449:web:f8f52ca878ac5281f9c4d0",
-  measurementId: "G-0RT5X6QRFC"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
