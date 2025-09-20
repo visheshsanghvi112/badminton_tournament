@@ -56,6 +56,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
+import { authLogger } from './logger';
 
 const AUTH_STORAGE_KEY = 'tournament_auth';
 
@@ -117,6 +118,7 @@ export class AuthService {
   // Firebase Authentication Methods
   static async signInWithEmail(email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> {
     try {
+      authLogger.info('Attempting email sign in', { email });
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
       
@@ -124,6 +126,7 @@ export class AuthService {
       const userProfile = await this.getUserProfile(firebaseUser.uid);
       
       if (!userProfile) {
+        authLogger.error('User profile not found after sign in', { uid: firebaseUser.uid });
         return { success: false, error: 'User profile not found' };
       }
 
@@ -145,9 +148,10 @@ export class AuthService {
       };
 
       this.setAuth(authToken);
+      authLogger.info('Email sign in successful', { userId: user.id, role: user.role });
       return { success: true, user };
     } catch (error: any) {
-      console.error('Firebase sign in error:', error);
+      authLogger.error('Email sign in failed', { email, error: error.message, code: error.code });
       return { success: false, error: error.message };
     }
   }
@@ -158,6 +162,7 @@ export class AuthService {
     userData: Omit<UserProfile, 'uid' | 'createdAt' | 'updatedAt'>
   ): Promise<{ success: boolean; user?: User; error?: string }> {
     try {
+      authLogger.info('Attempting email sign up', { email, role: userData.role });
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
       
@@ -199,19 +204,22 @@ export class AuthService {
       };
 
       this.setAuth(authToken);
+      authLogger.info('Email sign up successful', { userId: user.id, role: user.role });
       return { success: true, user };
     } catch (error: any) {
-      console.error('Firebase sign up error:', error);
+      authLogger.error('Email sign up failed', { email, error: error.message, code: error.code });
       return { success: false, error: error.message };
     }
   }
 
   static async signOutUser(): Promise<void> {
     try {
+      authLogger.info('Signing out user');
       await signOut(auth);
       this.clearAuth();
-    } catch (error) {
-      console.error('Firebase sign out error:', error);
+      authLogger.info('User signed out successfully');
+    } catch (error: any) {
+      authLogger.error('Sign out failed', { error: error.message });
       this.clearAuth(); // Clear local auth even if Firebase signout fails
     }
   }
@@ -224,13 +232,14 @@ export class AuthService {
       if (docSnap.exists()) {
         return docSnap.data() as UserProfile;
       }
+      authLogger.warn('User profile not found', { uid });
       return null;
     } catch (error: any) {
-      console.error('Error getting user profile:', error);
+      authLogger.error('Error getting user profile', { uid, error: error.message, code: error.code });
       
       // If it's a permissions error, we might need to set up Firestore rules
       if (error.code === 'permission-denied') {
-        console.warn('Firestore permission denied. Please set up security rules in Firebase Console.');
+        authLogger.warn('Firestore permission denied. Please set up security rules in Firebase Console.');
       }
       return null;
     }
@@ -238,20 +247,23 @@ export class AuthService {
 
   static async updateUserProfile(uid: string, updates: Partial<UserProfile>): Promise<boolean> {
     try {
+      authLogger.info('Updating user profile', { uid, updates });
       const docRef = doc(db, 'users', uid);
       await updateDoc(docRef, {
         ...updates,
         updatedAt: new Date().toISOString()
       });
+      authLogger.info('User profile updated successfully', { uid });
       return true;
-    } catch (error) {
-      console.error('Error updating user profile:', error);
+    } catch (error: any) {
+      authLogger.error('Error updating user profile', { uid, error: error.message, code: error.code });
       return false;
     }
   }
 
   static async signInWithGoogle(): Promise<{ success: boolean; user?: User; error?: string; isNewUser?: boolean }> {
     try {
+      authLogger.info('Attempting Google sign in');
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
@@ -263,6 +275,10 @@ export class AuthService {
       if (!userProfile) {
         // Create new user profile for Google sign-in
         isNewUser = true;
+        authLogger.info('Creating new user profile for Google sign in', { 
+          uid: firebaseUser.uid, 
+          email: firebaseUser.email 
+        });
         userProfile = {
           uid: firebaseUser.uid,
           email: firebaseUser.email || '',
@@ -293,19 +309,31 @@ export class AuthService {
       };
 
       this.setAuth(authToken);
+      authLogger.info('Google sign in successful', { 
+        userId: user.id, 
+        role: user.role, 
+        isNewUser 
+      });
       return { success: true, user, isNewUser };
     } catch (error: any) {
-      console.error('Google sign in error:', error);
+      authLogger.error('Google sign in failed', { error: error.message, code: error.code });
       return { success: false, error: error.message };
     }
   }
 
   static async sendPasswordReset(email: string): Promise<{ success: boolean; error?: string }> {
     try {
+      authLogger.info('Sending password reset email', { email });
       await sendPasswordResetEmail(auth, email);
+      authLogger.info('Password reset email sent successfully', { email });
       return { success: true };
     } catch (error: any) {
-      console.error('Password reset error:', error);
+      authLogger.error('Password reset failed', { 
+        email, 
+        error: error.message, 
+        code: error.code 
+      });
+      
       let errorMessage = 'Failed to send password reset email.';
       
       switch (error.code) {
@@ -318,6 +346,17 @@ export class AuthService {
         case 'auth/too-many-requests':
           errorMessage = 'Too many requests. Please try again later.';
           break;
+        case 'auth/missing-continue-uri':
+          errorMessage = 'Missing continue URL. Please check Firebase configuration.';
+          break;
+        case 'auth/invalid-continue-uri':
+          errorMessage = 'Invalid continue URL. Please check Firebase configuration.';
+          break;
+        case 'auth/unauthorized-continue-uri':
+          errorMessage = 'Unauthorized continue URL. Please check authorized domains in Firebase.';
+          break;
+        default:
+          errorMessage = `Firebase error: ${error.message}`;
       }
       
       return { success: false, error: errorMessage };

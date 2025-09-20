@@ -18,6 +18,7 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
+import LogViewer from "./components/dev/LogViewer";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,10 @@ const App = () => (
                 <Dashboard />
               </PrivateRoute>
             } />
+            {/* Development only routes */}
+            {import.meta.env.DEV && (
+              <Route path="/dev/logs" element={<LogViewer />} />
+            )}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
