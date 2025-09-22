@@ -544,7 +544,7 @@ export class UniversityService {
 
 // College Service
 export class CollegeService {
-  static async createCollege(collegeData: Omit<FirestoreCollege, 'collegeId' | 'createdAt' | 'updatedAt'>): Promise<string | null> {
+  static async createCollege(collegeData: Omit<FirestoreCollege, 'collegeId' | 'createdAt' | 'updatedAt' | 'teamId'>): Promise<string | null> {
     try {
       authLogger.info('Creating college', { name: collegeData.name, universityId: collegeData.universityId });
       

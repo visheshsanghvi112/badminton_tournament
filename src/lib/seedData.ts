@@ -1,4 +1,5 @@
-import { UniversityService, CollegeService, SEED_UNIVERSITIES, SEED_COLLEGES } from './fuzzyMatching';
+import { UniversityService, CollegeService } from './firestore';
+import { SEED_UNIVERSITIES, SEED_COLLEGES } from './fuzzyMatching';
 import { authLogger } from './logger';
 
 export class SeedDataService {

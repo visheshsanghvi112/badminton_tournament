@@ -143,3 +143,64 @@ All colors MUST be HSL for proper design system integration.
     @apply bg-background text-foreground;
   }
 }
+
+/* Animation Utilities */
+@layer utilities {
+  .animate-delay-100 { animation-delay: 0.1s; }
+  .animate-delay-200 { animation-delay: 0.2s; }
+  .animate-delay-300 { animation-delay: 0.3s; }
+  .animate-delay-400 { animation-delay: 0.4s; }
+  .animate-delay-500 { animation-delay: 0.5s; }
+  .animate-delay-600 { animation-delay: 0.6s; }
+
+  /* Stagger animation delays for multiple elements */
+  .animate-stagger-1 { animation-delay: 0s; }
+  .animate-stagger-2 { animation-delay: 0.1s; }
+  .animate-stagger-3 { animation-delay: 0.2s; }
+  .animate-stagger-4 { animation-delay: 0.3s; }
+  .animate-stagger-5 { animation-delay: 0.4s; }
+  .animate-stagger-6 { animation-delay: 0.5s; }
+  .animate-stagger-7 { animation-delay: 0.6s; }
+  .animate-stagger-8 { animation-delay: 0.7s; }
+
+  /* Performance optimizations */
+  .will-change-transform { will-change: transform; }
+  .will-change-opacity { will-change: opacity; }
+  .gpu-accelerated { transform: translateZ(0); }
+
+  /* Loading states */
+  .skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+
+  .skeleton-text {
+    @apply bg-muted/50 animate-pulse rounded h-4;
+  }
+
+  /* Hero background with optimized loading */
+  .hero-bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/src/assets/hero-badminton.jpg');
+  }
+
+  /* Performance optimizations for hero section */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+    z-index: -1;
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for accessibility */
+  .focus-visible:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}

@@ -1,16 +1,34 @@
+import { lazy, Suspense, useState, useEffect } from "react";
 import heroImage from "@/assets/hero-badminton.jpg";
 import CountdownTimer from "@/components/CountdownTimer";
-import SponsorCarousel from "@/components/SponsorCarousel";
-import InteractiveSchedule from "@/components/InteractiveSchedule";
-import ParticipationGuidelines from "@/components/ParticipationGuidelines";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SkeletonCard, SkeletonText, ErrorBoundary } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { Trophy, Users, Calendar, MapPin, Star, Target } from "lucide-react";
+
+// Lazy load heavy components for better performance
+const SponsorCarousel = lazy(() => import("@/components/SponsorCarousel"));
+const InteractiveSchedule = lazy(() => import("@/components/InteractiveSchedule"));
+const ParticipationGuidelines = lazy(() => import("@/components/ParticipationGuidelines"));
 
 const Index = () => {
   // Tournament date - December 15, 2025
   const tournamentDate = new Date('2025-12-15T09:00:00');
+
+  // Loading component for lazy-loaded sections
+  const LoadingSection = ({ title }: { title: string }) => (
+    <section className="py-16">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-12">{title}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    </section>
+  );
 
   const highlights = [
     { icon: Users, title: "200+ Universities", description: "Pan-India Participation" },
@@ -28,18 +46,15 @@ const Index = () => {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section 
-        className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center"
-        style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${heroImage})` }}
-      >
+      <section className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center hero-bg will-change-transform">
         <div className="container mx-auto px-4 text-white text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in-up">
             West Zone Inter-University<br />
             <span className="text-accent">Women's Badminton</span><br />
             Tournament 2025
           </h1>
-          
-          <div className="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-8 mb-8 text-base md:text-lg animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+
+          <div className="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-8 mb-8 text-base md:text-lg animate-fade-in-up animate-delay-200">
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-accent" />
               <span>December 15-18, 2025</span>
@@ -50,7 +65,7 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4 mb-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4 mb-12 animate-fade-in-up animate-delay-400">
             <Button size="lg" variant="tournament" asChild className="w-full sm:w-auto">
               <Link to="/register">Register Now</Link>
             </Button>
@@ -63,7 +78,7 @@ const Index = () => {
           </div>
 
           {/* Countdown Timer */}
-          <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <div className="mb-8 animate-fade-in-up animate-delay-600">
             <h3 className="text-xl mb-4">Tournament Starts In</h3>
             <CountdownTimer targetDate={tournamentDate} />
           </div>
@@ -71,14 +86,17 @@ const Index = () => {
       </section>
 
       {/* Quick Highlights */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-muted/30" aria-labelledby="highlights-heading">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Tournament Highlights</h2>
+          <h2 id="highlights-heading" className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Tournament Highlights</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {highlights.map((highlight, index) => (
-              <Card key={index} className="text-center shadow-tournament-card hover:shadow-tournament transition-all duration-300 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Card
+                key={index}
+                className={`text-center shadow-tournament-card hover:shadow-tournament transition-all duration-300 animate-fade-in-up animate-stagger-${index + 1} will-change-transform`}
+              >
                 <CardContent className="p-6 md:p-8">
-                  <highlight.icon className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <highlight.icon className="h-12 w-12 text-primary mx-auto mb-4" aria-hidden="true" />
                   <h3 className="text-xl md:text-2xl font-bold text-primary mb-2">{highlight.title}</h3>
                   <p className="text-muted-foreground text-sm md:text-base">{highlight.description}</p>
                 </CardContent>
@@ -120,13 +138,25 @@ const Index = () => {
       </section>
 
       {/* Interactive Schedule */}
-      <InteractiveSchedule />
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSection title="Interactive Schedule" />}>
+          <InteractiveSchedule />
+        </Suspense>
+      </ErrorBoundary>
 
       {/* Participation Guidelines */}
-      <ParticipationGuidelines />
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSection title="Participation Guidelines" />}>
+          <ParticipationGuidelines />
+        </Suspense>
+      </ErrorBoundary>
 
       {/* Sponsors Carousel */}
-      <SponsorCarousel />
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSection title="Our Sponsors" />}>
+          <SponsorCarousel />
+        </Suspense>
+      </ErrorBoundary>
 
       {/* Announcements */}
       <section className="py-12 bg-primary text-primary-foreground">
@@ -157,13 +187,18 @@ const Index = () => {
       </section>
 
       {/* Quick Links */}
-      <section className="py-16">
+      <section className="py-16" aria-labelledby="quick-links-heading">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Quick Access</h2>
+          <h2 id="quick-links-heading" className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Quick Access</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickLinks.map((link, index) => (
-              <Link key={index} to={link.href} className="block animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <Card className="hover:shadow-tournament-card transition-all duration-300 cursor-pointer">
+              <Link
+                key={index}
+                to={link.href}
+                className={`block animate-fade-in-up animate-stagger-${index + 1} focus-visible`}
+                aria-label={`${link.title} - ${link.description}`}
+              >
+                <Card className="hover:shadow-tournament-card transition-all duration-300 cursor-pointer h-full">
                   <CardHeader>
                     <CardTitle className="text-base md:text-lg">{link.title}</CardTitle>
                   </CardHeader>

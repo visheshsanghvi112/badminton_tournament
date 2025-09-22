@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { UniversityService, CollegeService, FirestoreUniversity, FirestoreCollege } from './firestore';
+import { UniversityService, CollegeService, TeamService, UserService, FirestoreUniversity, FirestoreCollege } from './firestore';
 import { authLogger } from './logger';
 
 // Seed data for Indian universities and colleges
