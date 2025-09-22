@@ -18,6 +18,8 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Privacy from "./pages/Privacy";
 import LogViewer from "./components/dev/LogViewer";
 import UserDebugger from "./components/dev/UserDebugger";
 
@@ -53,6 +55,10 @@ const App = () => (
             <Route path="/player" element={<Navigate to="/dashboard" replace />} />
             <Route path="/super-admin" element={<Navigate to="/dashboard" replace />} />
             
+            {/* Legal pages */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/privacy" element={<Privacy />} />
+
             {/* Development only routes */}
             {import.meta.env.DEV && (
               <>

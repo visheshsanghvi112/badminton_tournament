@@ -200,7 +200,7 @@ export class UserService {
 export class TeamService {
   static async createTeam(teamData: Omit<FirestoreTeam, 'teamId' | 'createdAt' | 'updatedAt'>): Promise<string | null> {
     try {
-      authLogger.info('Creating team', { teamName: teamData.teamName, managerUID: teamData.managerUID });
+      authLogger.info('Creating team', { collegeId: teamData.collegeId, managerUID: teamData.managerUID });
       
       const teamDoc: Omit<FirestoreTeam, 'teamId'> = {
         ...teamData,

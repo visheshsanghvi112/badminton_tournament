@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, Mail, Phone } from "lucide-react";
+import { MapPin, Mail, Phone, Instagram, Linkedin } from "lucide-react";
 import symbiosisLogo from "@/assets/symbiosis-logo.png";
 
 const Footer = () => {
@@ -85,17 +85,46 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-secondary-foreground/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-secondary-foreground/60 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <p>
-            © 2025 Symbiosis International (Deemed University). All rights reserved.
-          </p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/privacy" className="hover:text-secondary-foreground transition-all duration-300 hover:scale-105">
-              Privacy Policy
-            </Link>
-            <Link to="/disclaimer" className="hover:text-secondary-foreground transition-all duration-300 hover:scale-105">
-              Disclaimer
-            </Link>
+        <div className="border-t border-secondary-foreground/20 mt-8 pt-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <div className="flex flex-col md:flex-row justify-between items-center text-sm text-secondary-foreground/60">
+            <p>
+              © 2025 Symbiosis International (Deemed University). All rights reserved.
+            </p>
+
+            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+              {/* Legal Links */}
+              <div className="flex space-x-4">
+                <Link to="/privacy" className="hover:text-secondary-foreground transition-all duration-300 hover:scale-105">
+                  Privacy
+                </Link>
+                <Link to="/terms-of-service" className="hover:text-secondary-foreground transition-all duration-300 hover:scale-105">
+                  Terms of Service
+                </Link>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="flex items-center space-x-3">
+                <span className="text-secondary-foreground/40 text-xs">Follow us:</span>
+                <a
+                  href="https://instagram.com/symbiosisuniversity"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-lg"
+                  aria-label="Follow us on Instagram"
+                >
+                  <Instagram className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://linkedin.com/school/symbiosis-international-university"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 hover:shadow-lg"
+                  aria-label="Connect with us on LinkedIn"
+                >
+                  <Linkedin className="w-4 h-4 text-white" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

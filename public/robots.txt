@@ -1,25 +1,46 @@
+# West Zone Inter-University Women's Badminton Tournament - Robots.txt
+# Updated: 2025-01-22
+
+# Default crawling rules for all bots
 User-agent: *
 Allow: /
 
-# High priority pages
+# High priority pages (crawl frequently)
 Allow: /
 Allow: /about
 Allow: /register
 Allow: /sponsors
 Allow: /contact
-
-# Standard pages
-Allow: /gallery
 Allow: /faq
+
+# Standard pages (crawl regularly)
+Allow: /gallery
 Allow: /login
 
-# Block any admin or sensitive paths (future-proofing)
+# Legal pages (crawl infrequently)
+Allow: /privacy-policy
+Allow: /privacy
+
+# Protected routes (block all bots)
+Disallow: /dashboard
 Disallow: /admin
 Disallow: /api
 Disallow: /_next
 Disallow: /node_modules
 Disallow: /.env
 Disallow: /package.json
+Disallow: /src
+Disallow: /dist
+
+# Block common spam bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
 
 # Sitemap location
 Sitemap: https://tournament2025.symbiosis.ac.in/sitemap.xml
@@ -27,33 +48,57 @@ Sitemap: https://tournament2025.symbiosis.ac.in/sitemap.xml
 # Crawl delay (respectful crawling)
 Crawl-delay: 1
 
-# Allow common bots
+# Allow major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Slurp
 Allow: /
+Crawl-delay: 0
 
 User-agent: DuckDuckBot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Baiduspider
 Allow: /
+Crawl-delay: 0
 
 User-agent: YandexBot
 Allow: /
+Crawl-delay: 0
 
+# Allow social media crawlers
 User-agent: facebookexternalhit
 Allow: /
+Crawl-delay: 0
 
 User-agent: Twitterbot
 Allow: /
+Crawl-delay: 0
 
 User-agent: LinkedInBot
 Allow: /
+Crawl-delay: 0
 
 User-agent: WhatsApp
 Allow: /
+Crawl-delay: 0
+
+# Block AI crawlers that consume excessive resources
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Anthropic-AI
+Disallow: /

@@ -7,6 +7,44 @@ import { HelpCircle, FileText, Users, Calendar, Award } from "lucide-react";
 const FAQ = () => {
   const faqSections = [
     {
+      title: "Account & Authentication",
+      icon: Users,
+      items: [
+        {
+          question: "How do I create an account?",
+          answer: "Click on 'Register' from the homepage and fill in your details including name, email, university, and role (Player/Manager). You'll receive a verification email to complete your registration."
+        },
+        {
+          question: "I forgot my password. How can I reset it?",
+          answer: "Click 'Forgot Password' on the login page and enter your registered email address. You'll receive a password reset link via email. The link expires in 24 hours for security."
+        },
+        {
+          question: "Can I sign in with Google?",
+          answer: "Yes, you can use Google Sign-In for faster access. Click the 'Continue with Google' button on the login page. Your Google account will be linked to your tournament profile."
+        },
+        {
+          question: "Why can't I log in to my account?",
+          answer: "Common login issues include: incorrect email/password, unverified email address, or account suspension. Check your email for verification links and ensure you're using the correct credentials."
+        },
+        {
+          question: "How do I verify my email address?",
+          answer: "After registration, check your email inbox for a verification link from our system. Click the link to verify your account. Check spam/junk folder if you don't see it within 5 minutes."
+        },
+        {
+          question: "Can I change my registered email address?",
+          answer: "Email changes require verification. Contact support with your current email and the new email address you want to use. We'll guide you through the secure update process."
+        },
+        {
+          question: "What should I do if I get locked out of my account?",
+          answer: "If you're locked out due to multiple failed login attempts, wait 30 minutes before trying again. For other lockout issues, contact support with your registered email and details."
+        },
+        {
+          question: "How do I update my profile information?",
+          answer: "After logging in, go to your profile settings where you can update personal information, university details, and contact preferences. Some changes may require re-verification."
+        }
+      ]
+    },
+    {
       title: "Registration & Eligibility",
       icon: FileText,
       items: [
