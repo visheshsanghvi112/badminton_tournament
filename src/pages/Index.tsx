@@ -13,8 +13,8 @@ const InteractiveSchedule = lazy(() => import("@/components/InteractiveSchedule"
 const ParticipationGuidelines = lazy(() => import("@/components/ParticipationGuidelines"));
 
 const Index = () => {
-  // Tournament date - December 15, 2025
-  const tournamentDate = new Date('2025-12-15T09:00:00');
+  // Tournament date - December 26, 2025
+  const tournamentDate = new Date('2025-12-26T09:00:00');
 
   // Loading component for lazy-loaded sections
   const LoadingSection = ({ title }: { title: string }) => (
@@ -57,7 +57,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-8 mb-8 text-base md:text-lg animate-fade-in-up animate-delay-200">
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-accent" />
-              <span>December 15-18, 2025</span>
+              <span>December 26-29, 2025</span>
             </div>
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-accent" />
@@ -69,7 +69,7 @@ const Index = () => {
             <Button size="lg" variant="tournament" asChild className="w-full sm:w-auto">
               <Link to="/register">Register Now</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto text-white border-white hover:bg-white hover:text-primary">
+            <Button size="lg" variant="outline" asChild className="w-full sm:w-auto text-white border-white bg-transparent">
               <Link to="/sponsors">View Sponsors</Link>
             </Button>
             <Button size="lg" variant="secondary" asChild className="w-full sm:w-auto">

@@ -687,7 +687,7 @@ export class MigrationService {
         
         // Map old roles to new roles
         if (user.role === 'sponsor' || user.role === 'observer' || user.role === 'volunteer') {
-          updates.role = 'player';
+          updates.role = 'player' as const;
           updatedCount++;
         }
         

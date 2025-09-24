@@ -20,7 +20,7 @@ const Sponsors = () => {
     {
       tier: "Associate Sponsors",
       icon: Handshake,
-      color: "text-primary", 
+      color: "text-primary",
       benefits: [
         "Logo on tournament materials",
         "VIP hospitality for 25 guests",
@@ -35,7 +35,7 @@ const Sponsors = () => {
       color: "text-sports",
       benefits: [
         "Logo on event banners",
-        "VIP hospitality for 10 guests", 
+        "VIP hospitality for 10 guests",
         "Certificate of participation",
         "Tournament merchandise",
         "Post-event report inclusion",
@@ -61,7 +61,7 @@ const Sponsors = () => {
             Tournament Sponsors
           </h1>
           <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
-            Join prestigious organizations in supporting the future of women's badminton. 
+            Join prestigious organizations in supporting the future of women's badminton.
             Partner with excellence, tradition, and sporting spirit.
           </p>
         </div>
@@ -91,7 +91,7 @@ const Sponsors = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Sponsorship Opportunities</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Be part of India's premier inter-university women's badminton tournament. 
+              Be part of India's premier inter-university women's badminton tournament.
               Multiple partnership levels available to suit your organization's goals.
             </p>
           </div>
@@ -125,13 +125,13 @@ const Sponsors = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-8">Why Partner With Us?</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               <Card>
                 <CardContent className="p-6">
                   <h4 className="font-semibold mb-3 text-primary">Prestigious Association</h4>
                   <p className="text-muted-foreground">
-                    Associate your brand with Symbiosis International's A++ NAAC rating and 
+                    Associate your brand with Symbiosis International's A++ NAAC rating and
                     top NIRF rankings. Gain credibility through our institutional excellence.
                   </p>
                 </CardContent>
@@ -141,7 +141,7 @@ const Sponsors = () => {
                 <CardContent className="p-6">
                   <h4 className="font-semibold mb-3 text-primary">Targeted Audience</h4>
                   <p className="text-muted-foreground">
-                    Reach 1,000+ elite athletes, university officials, and sports enthusiasts. 
+                    Reach 1,000+ elite athletes, university officials, and sports enthusiasts.
                     Perfect for brands targeting youth and sports demographics.
                   </p>
                 </CardContent>
@@ -151,7 +151,7 @@ const Sponsors = () => {
                 <CardContent className="p-6">
                   <h4 className="font-semibold mb-3 text-primary">Media Coverage</h4>
                   <p className="text-muted-foreground">
-                    Extensive coverage across digital platforms, sports media, and university 
+                    Extensive coverage across digital platforms, sports media, and university
                     networks. Amplify your brand message to a wider audience.
                   </p>
                 </CardContent>
@@ -161,7 +161,7 @@ const Sponsors = () => {
                 <CardContent className="p-6">
                   <h4 className="font-semibold mb-3 text-primary">CSR Alignment</h4>
                   <p className="text-muted-foreground">
-                    Support women's empowerment in sports while fulfilling your corporate 
+                    Support women's empowerment in sports while fulfilling your corporate
                     social responsibility objectives. Meaningful community impact.
                   </p>
                 </CardContent>
@@ -201,7 +201,7 @@ const Sponsors = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Become a Tournament Sponsor</h2>
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Partner with us to create an unforgettable sporting experience while 
+            Partner with us to create an unforgettable sporting experience while
             gaining valuable brand exposure and community goodwill.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">

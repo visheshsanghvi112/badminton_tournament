@@ -1,3 +1,4 @@
+/* @ts-ignore - Tailwind CSS directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -136,10 +137,12 @@ All colors MUST be HSL for proper design system integration.
 
 @layer base {
   * {
+    /* @ts-ignore - Tailwind @apply directive */
     @apply border-border;
   }
 
   body {
+    /* @ts-ignore - Tailwind @apply directive */
     @apply bg-background text-foreground;
   }
 }
@@ -170,10 +173,12 @@ All colors MUST be HSL for proper design system integration.
 
   /* Loading states */
   .skeleton {
+    /* @ts-ignore - Tailwind @apply directive */
     @apply bg-muted animate-pulse rounded;
   }
 
   .skeleton-text {
+    /* @ts-ignore - Tailwind @apply directive */
     @apply bg-muted/50 animate-pulse rounded h-4;
   }
 
@@ -201,6 +206,7 @@ All colors MUST be HSL for proper design system integration.
 
   /* Focus styles for accessibility */
   .focus-visible:focus-visible {
+    /* @ts-ignore - Tailwind @apply directive */
     @apply outline-2 outline-offset-2 outline-primary;
   }
 }

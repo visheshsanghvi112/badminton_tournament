@@ -81,13 +81,15 @@ const PlayerDashboard = () => {
         profilePhoto: '/placeholder.svg'
       },
       payments: [
-        { id: 1, description: 'Tournament Registration Fee', amount: 1500, status: 'Not Paid', dueDate: '2024-12-20' },
-        { id: 2, description: 'Accommodation Fee (Optional)', amount: 2000, status: 'Not Paid', dueDate: '2024-12-25' }
+        { id: 1, description: 'Officiating Fee', amount: 1500, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 2, description: 'Shuttlecock Charges', amount: 3300, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 3, description: 'Protest Fee', amount: 2000, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 4, description: 'Accommodation (Rs.300/Per Day Per Person)', amount: 300, status: 'Not Paid', dueDate: '2025-12-20' }
       ],
       paymentStatus: {
-        totalAmount: 3500,
+        totalAmount: 7100,
         paidAmount: 0,
-        pendingAmount: 3500,
+        pendingAmount: 7100,
         lastUpdated: new Date().toISOString()
       }
     });
