@@ -88,7 +88,7 @@ const Footer = () => {
         <div className="border-t border-secondary-foreground/20 mt-8 pt-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-secondary-foreground/60">
             <p>
-              © 2025 Symbiosis International (Deemed University). All rights reserved.
+              © 2025-26 Symbiosis International (Deemed University). All rights reserved.
             </p>
 
             <div className="flex items-center space-x-6 mt-4 md:mt-0">

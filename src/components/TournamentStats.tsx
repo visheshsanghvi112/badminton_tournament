@@ -5,33 +5,33 @@ const TournamentStats = () => {
   const stats = [
     {
       icon: Users,
-      number: "200+",
+      number: "70+",
       label: "Participating Universities",
       description: "From across the West Zone"
     },
     {
       icon: Trophy,
-      number: "1000+",
-      label: "Elite Athletes",
-      description: "Top women badminton players"
+      number: "500+",
+      label: "Participants & Officials",
+      description: "Players, coaches & officials"
     },
     {
       icon: Globe,
-      number: "4",
+      number: "5",
       label: "States Represented",
-      description: "Gujarat, Maharashtra, Goa, Rajasthan"
+      description: "Maharashtra, Gujarat, Goa, Rajasthan, MP"
     },
     {
       icon: Award,
-      number: "15+",
-      label: "Medal Categories",
-      description: "Singles, Doubles, Team events"
+      number: "5",
+      label: "Badminton Courts",
+      description: "Professional tournament setup"
     },
     {
       icon: Clock,
-      number: "4",
+      number: "5",
       label: "Tournament Days",
-      description: "Action-packed competition"
+      description: "December 26-29, 2025"
     },
     {
       icon: Target,
@@ -47,7 +47,7 @@ const TournamentStats = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 animate-fade-in-up">Tournament by Numbers</h2>
           <p className="text-xl opacity-90 max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            The largest inter-university women's badminton tournament in the West Zone
+            West Zone Inter-University Women's Badminton Tournament 2025-26 hosted at Hill Top, Lavale, Pune
           </p>
         </div>
 

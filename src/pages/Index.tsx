@@ -31,9 +31,9 @@ const Index = () => {
   );
 
   const highlights = [
-    { icon: Users, title: "200+ Universities", description: "Pan-India Participation" },
-    { icon: Trophy, title: "1,000+ Athletes", description: "Elite Competition" },
-    { icon: Star, title: "1 Champion", description: "Ultimate Glory" },
+    { icon: Users, title: "70+ Universities", description: "West Zone Participation" },
+    { icon: Trophy, title: "500+ Participants", description: "Players & Officials" },
+    { icon: Star, title: "5 Courts", description: "Professional Setup" },
   ];
 
   const quickLinks = [
@@ -51,7 +51,7 @@ const Index = () => {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in-up">
             West Zone Inter-University<br />
             <span className="text-accent">Women's Badminton</span><br />
-            Tournament 2025
+            Tournament 2025-26
           </h1>
 
           <div className="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-8 mb-8 text-base md:text-lg animate-fade-in-up animate-delay-200">
@@ -124,7 +124,7 @@ const Index = () => {
             <div className="mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary tracking-tight">About Symbiosis International</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                A premier institution hosting the West Zone Inter-University Women's Badminton Tournament 2025
+                A premier institution hosting the West Zone Inter-University Women's Badminton Tournament 2025-26
               </p>
             </div>
 
@@ -132,7 +132,7 @@ const Index = () => {
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl mx-auto">
                 Symbiosis International (Deemed University), a NAAC A++ and Category-I Institution
                 ranked #24 in India (NIRF 2025), is proud to host the West Zone Inter-University
-                Women's Badminton Tournament 2025.
+                Women's Badminton Tournament 2025-26.
               </p>
             </div>
 

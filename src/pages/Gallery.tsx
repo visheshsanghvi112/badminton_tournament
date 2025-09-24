@@ -198,10 +198,10 @@ const Gallery = () => {
       {/* Coming Soon Notice */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">2025 Tournament Documentation</h2>
+          <h2 className="text-3xl font-bold mb-6">2025-26 Tournament Documentation</h2>
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Professional photography and videography services will capture every moment of the 
-            2025 tournament. Stay tuned for live updates and post-event galleries.
+            Professional photography and videography services will capture every moment of the
+            2025-26 tournament. Stay tuned for live updates and post-event galleries.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
             <div className="flex items-center space-x-2">

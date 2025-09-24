@@ -81,15 +81,17 @@ const PlayerDashboard = () => {
         profilePhoto: '/placeholder.svg'
       },
       payments: [
-        { id: 1, description: 'Officiating Fee', amount: 1500, status: 'Not Paid', dueDate: '2025-12-20' },
-        { id: 2, description: 'Shuttlecock Charges', amount: 3300, status: 'Not Paid', dueDate: '2025-12-20' },
-        { id: 3, description: 'Protest Fee', amount: 2000, status: 'Not Paid', dueDate: '2025-12-20' },
-        { id: 4, description: 'Accommodation (Rs.300/Per Day Per Person)', amount: 300, status: 'Not Paid', dueDate: '2025-12-20' }
+        { id: 1, description: 'Officiating Fee (Rs.1500 per match)', amount: 1500, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 2, description: 'Shuttlecock Charges (Full Box)', amount: 3300, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 3, description: 'Protest Fee (Rs.1500 within 2 hours)', amount: 1500, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 4, description: 'Accommodation Deposit (Rs.300/day/person - Refundable)', amount: 300, status: 'Not Paid', dueDate: '2025-12-20' },
+        { id: 5, description: 'AIU Tournament Fee', amount: 0, status: 'Receipt Required', dueDate: '2025-12-20' },
+        { id: 6, description: 'AIU Annual Subscription Fee', amount: 0, status: 'Receipt Required', dueDate: '2025-12-20' }
       ],
       paymentStatus: {
-        totalAmount: 7100,
+        totalAmount: 6600,
         paidAmount: 0,
-        pendingAmount: 7100,
+        pendingAmount: 6600,
         lastUpdated: new Date().toISOString()
       }
     });
@@ -350,16 +352,41 @@ const PlayerDashboard = () => {
                 <p className="text-blue-700 mb-4 text-sm sm:text-base">
                   Complete all required forms for tournament participation. Upload your documents directly in each form. All forms must be submitted before the registration deadline.
                 </p>
+
+                {/* Required Documents List */}
+                <div className="mb-4 p-4 bg-white border border-blue-200 rounded-lg">
+                  <h4 className="font-semibold text-blue-900 mb-3 text-sm">Required Documents:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {[
+                      "Passport Size Photo",
+                      "University/College ID",
+                      "Recent Passing Certificate (HSC/UG/PG)",
+                      "Eligibility Proforma",
+                      "Player's Form",
+                      "SSC Marksheet with DOB",
+                      "HSC Marksheet with DOB",
+                      "Leaving Certificate",
+                      "Birth Certificate",
+                      "Aadhaar Card"
+                    ].map((document, index) => (
+                      <div key={index} className="flex items-center space-x-2 text-sm">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                        <span className="text-gray-700">{document}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-lg border border-blue-200 gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-blue-900 text-sm sm:text-base">Player Registration Form</h4>
-                      <p className="text-xs sm:text-sm text-blue-600">Complete registration details & upload ID documents</p>
+                      <p className="text-xs sm:text-sm text-blue-600">Complete registration details & upload all required documents</p>
                     </div>
                     <Button asChild className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto text-sm">
-                      <a 
-                        href="https://forms.google.com/tournament-registration" 
-                        target="_blank" 
+                      <a
+                        href="https://forms.google.com/tournament-registration"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -368,16 +395,16 @@ const PlayerDashboard = () => {
                       </a>
                     </Button>
                   </div>
-                  
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-lg border border-blue-200 gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-blue-900 text-sm sm:text-base">Medical Clearance Form</h4>
                       <p className="text-xs sm:text-sm text-blue-600">Health declaration & upload medical certificate</p>
                     </div>
                     <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50 w-full sm:w-auto text-sm">
-                      <a 
-                        href="https://forms.google.com/medical-clearance" 
-                        target="_blank" 
+                      <a
+                        href="https://forms.google.com/medical-clearance"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -393,9 +420,9 @@ const PlayerDashboard = () => {
                       <p className="text-xs sm:text-sm text-blue-600">Request accommodation & upload supporting documents</p>
                     </div>
                     <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50 w-full sm:w-auto text-sm">
-                      <a 
-                        href="https://forms.google.com/accommodation-request" 
-                        target="_blank" 
+                      <a
+                        href="https://forms.google.com/accommodation-request"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -509,7 +536,7 @@ const PlayerDashboard = () => {
                     Payment Details
                   </CardTitle>
                   <CardDescription className="text-blue-700 text-sm sm:text-base">
-                    Use any of these methods to complete your payment
+                    Use any of these methods to complete your payment. Additional fees: Meals (Rs.70 each), Transport (Rs.1500 optional)
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -571,9 +598,11 @@ const PlayerDashboard = () => {
                     <h5 className="font-semibold text-blue-900 mb-2 text-sm">Important Notes:</h5>
                     <ul className="text-xs text-blue-800 space-y-1">
                       <li>• Always include your email ({playerData?.profile?.email}) in payment reference</li>
+                      <li>• AIU Tournament Fee & Annual Subscription Fee: Submit receipts to tournament office</li>
                       <li>• Keep payment receipt/screenshot for verification</li>
                       <li>• Payment status will be updated within 24-48 hours</li>
                       <li>• Contact: finance@siu.edu.in for payment issues</li>
+                      <li>• Financial controls managed by designated Finance In-Charge</li>
                     </ul>
                   </div>
                 </CardContent>

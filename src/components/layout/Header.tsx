@@ -51,7 +51,7 @@ const Header = () => {
                 SYMBIOSIS INTERNATIONAL
               </div>
               <div className="text-xs text-muted-foreground">
-                Women's Badminton Tournament 2025
+                Women's Badminton Tournament 2025-26
               </div>
             </div>
           </Link>

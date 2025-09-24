@@ -10,7 +10,7 @@ const InteractiveSchedule = () => {
 
   const scheduleData = {
     day1: {
-      date: "December 15, 2025",
+      date: "December 26, 2025",
       title: "Opening Day - Preliminaries",
       events: [
         {
@@ -51,7 +51,7 @@ const InteractiveSchedule = () => {
       ]
     },
     day2: {
-      date: "December 16, 2025",
+      date: "December 27, 2025",
       title: "Quarter Finals Day",
       events: [
         {
@@ -85,7 +85,7 @@ const InteractiveSchedule = () => {
       ]
     },
     day3: {
-      date: "December 17, 2025",
+      date: "December 28, 2025",
       title: "Semi Finals Day",
       events: [
         {
@@ -119,7 +119,7 @@ const InteractiveSchedule = () => {
       ]
     },
     day4: {
-      date: "December 18, 2025",
+      date: "December 29, 2025",
       title: "Finals Day - Grand Finale",
       events: [
         {

@@ -58,7 +58,7 @@ const Contact = () => {
       icon: MessageCircle,
       title: "Support Helpdesk",
       details: ["Registration & General Queries", "Monday - Friday, 9:00 AM - 6:00 PM"],
-      contact: "help@tournament2025.in"
+      contact: "help@tournament2025-26.in"
     }
   ];
 
@@ -271,7 +271,7 @@ const Contact = () => {
             </Button>
             <Button size="lg" variant="outline" className="w-full sm:w-auto">
               <Mail className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Email: </span>help@tournament2025.in
+              <span className="hidden sm:inline">Email: </span>help@tournament2025-26.in
             </Button>
           </div>
         </div>

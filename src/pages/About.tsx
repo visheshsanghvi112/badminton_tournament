@@ -36,15 +36,25 @@ const About = () => {
             <h2 className="text-3xl font-bold text-center mb-8">Tournament Overview</h2>
             <div className="prose prose-lg max-w-none text-muted-foreground">
               <p className="text-lg leading-relaxed mb-6">
-                The West Zone Inter-University Women's Badminton Tournament 2025 represents the pinnacle
+                The West Zone Inter-University Women's Badminton Tournament 2025-26 represents the pinnacle
                 of collegiate sports competition in the western region of India. Hosted under the mandate
                 of the Association of Indian Universities (AIU), this prestigious event brings together
-                over 200 universities and 1,000+ elite female athletes competing for ultimate glory.
+                70+ universities and 500+ participants and officials competing for ultimate glory.
               </p>
               <p className="text-lg leading-relaxed mb-6">
-                Symbiosis International (Deemed University) is honored to serve as the host institution,
-                leveraging our world-class sports facilities and decades of experience in organizing
-                international sporting events.
+                <strong>Event Details:</strong><br />
+                • <strong>Host:</strong> Symbiosis International (Deemed University)<br />
+                • <strong>Location:</strong> Hill Top – Lavale, Pune<br />
+                • <strong>Duration:</strong> 5 days (December 26-29, 2025)<br />
+                • <strong>Format:</strong> Group stage (4 pools) → Knockout rounds (Quarterfinals → Semifinals → Final)<br />
+                • <strong>Seeding:</strong> Top teams seeded based on previous year results
+              </p>
+              <p className="text-lg leading-relaxed mb-6">
+                <strong>Primary Objectives:</strong><br />
+                • Provide a high-quality competitive platform for West Zone universities<br />
+                • Showcase the University's sports infrastructure and organizational capabilities<br />
+                • Deliver an efficient, safe, and memorable experience for players, officials and guests<br />
+                • Create sponsorship and media engagement opportunities
               </p>
             </div>
 
@@ -125,8 +135,8 @@ const About = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-8">Sports & Badminton Facilities</h2>
             <p className="text-lg text-muted-foreground mb-8">
-              The Symbiosis Sports Complex is a state-of-the-art facility designed to host
-              international-level competitions with world-class amenities.
+              The Symbiosis Sports Complex at Hill Top, Lavale, Pune is a state-of-the-art facility designed to host
+              international-level competitions with world-class amenities and 5 professional badminton courts.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -134,7 +144,7 @@ const About = () => {
                 <CardContent className="p-6 text-left">
                   <h4 className="font-semibold mb-3">Tournament Facilities</h4>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• 8 Professional badminton courts</li>
+                    <li>• 5 Professional badminton courts</li>
                     <li>• International-standard flooring</li>
                     <li>• Professional lighting systems</li>
                     <li>• Seating capacity: 2,000+ spectators</li>
@@ -236,8 +246,8 @@ const About = () => {
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold mb-4">Ready to Compete?</h3>
                   <p className="text-lg mb-6 opacity-90">
-                    Join the most prestigious women's badminton tournament in West Zone.
-                    Showcase your skills, compete with the best, and write your success story.
+                    Join the West Zone Inter-University Women's Badminton Tournament 2025-26.
+                    5-day tournament with group stage (4 pools) and knockout rounds featuring 70+ universities.
                   </p>
                   <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
                     <Button size="lg" variant="secondary" asChild>

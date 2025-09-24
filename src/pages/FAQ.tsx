@@ -58,7 +58,7 @@ const FAQ = () => {
         },
         {
           question: "When does registration open and close?",
-          answer: "Registration opens in October 2025 and closes by February 2025. Early bird registration may be available with discounted fees. Check the official announcements for exact dates."
+          answer: "Registration opens in October 2025 and closes by February 2026. Early bird registration may be available with discounted fees. Check the official announcements for exact dates."
         },
         {
           question: "What is the registration fee?",
