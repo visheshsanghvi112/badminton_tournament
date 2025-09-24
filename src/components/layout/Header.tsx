@@ -41,8 +41,8 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-            <img 
-              src={symbiosisLogo} 
+            <img
+              src={symbiosisLogo}
               alt="Symbiosis International University"
               className="h-10 w-10"
             />
