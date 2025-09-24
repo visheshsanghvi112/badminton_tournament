@@ -20,16 +20,18 @@ import {
   FirestoreCollege
 } from '@/lib/firestore';
 import { SeedDataService } from '@/lib/seedData';
-import { 
-  Users, 
-  UserPlus, 
-  Shield, 
-  CreditCard, 
+import {
+  Users,
+  UserPlus,
+  Shield,
+  CreditCard,
   LogOut,
   RefreshCw,
   Trash2,
   Eye,
-  Settings
+  Settings,
+  GraduationCap,
+  AlertTriangle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
