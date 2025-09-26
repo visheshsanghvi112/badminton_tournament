@@ -37,9 +37,14 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/about" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-all duration-300 hover:scale-105 inline-block">
+                <a 
+                  href="https://www.siu.edu.in/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-secondary-foreground/80 hover:text-secondary-foreground transition-all duration-300 hover:scale-105 inline-block"
+                >
                   About Tournament
-                </Link>
+                </a>
               </li>
               <li>
                 <Link to="/sponsors" className="text-secondary-foreground/80 hover:text-secondary-foreground transition-all duration-300 hover:scale-105 inline-block">

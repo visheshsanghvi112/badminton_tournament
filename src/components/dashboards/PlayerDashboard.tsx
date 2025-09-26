@@ -384,9 +384,9 @@ const PlayerDashboard = () => {
                       <p className="text-xs sm:text-sm text-blue-600">Complete registration details & upload all required documents</p>
                     </div>
                     <Button asChild className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto text-sm">
-                      <a
-                        href="https://forms.google.com/tournament-registration"
-                        target="_blank"
+                      <a 
+                        href="https://forms.google.com/tournament-registration" 
+                        target="_blank" 
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -395,16 +395,16 @@ const PlayerDashboard = () => {
                       </a>
                     </Button>
                   </div>
-
+                  
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-lg border border-blue-200 gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium text-blue-900 text-sm sm:text-base">Medical Clearance Form</h4>
                       <p className="text-xs sm:text-sm text-blue-600">Health declaration & upload medical certificate</p>
                     </div>
                     <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50 w-full sm:w-auto text-sm">
-                      <a
-                        href="https://forms.google.com/medical-clearance"
-                        target="_blank"
+                      <a 
+                        href="https://forms.google.com/medical-clearance" 
+                        target="_blank" 
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -420,9 +420,9 @@ const PlayerDashboard = () => {
                       <p className="text-xs sm:text-sm text-blue-600">Request accommodation & upload supporting documents</p>
                     </div>
                     <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50 w-full sm:w-auto text-sm">
-                      <a
-                        href="https://forms.google.com/accommodation-request"
-                        target="_blank"
+                      <a 
+                        href="https://forms.google.com/accommodation-request" 
+                        target="_blank" 
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
                       >
@@ -456,12 +456,12 @@ const PlayerDashboard = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                    <CreditCard className="h-5 w-5" />
-                    Payments & Fees
-                  </CardTitle>
+                <CreditCard className="h-5 w-5" />
+                Payments & Fees
+              </CardTitle>
                   <CardDescription className="text-sm sm:text-base">
-                    Manage your tournament fees and payments
-                  </CardDescription>
+                Manage your tournament fees and payments
+              </CardDescription>
                 </div>
                 <Button 
                   variant="outline" 
@@ -567,25 +567,25 @@ const PlayerDashboard = () => {
                     <div className="bg-white p-4 rounded-lg border border-blue-200">
                       <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2 text-sm">
                         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                          <line x1="8" y1="21" x2="16" y2="21"/>
-                          <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                      </svg>
                         Bank Transfer
-                      </h4>
+                    </h4>
                       <div className="space-y-2 text-xs">
-                        <div>
+                      <div>
                           <p className="font-medium text-gray-700">Account:</p>
-                          <p className="text-gray-600">Symbiosis International University</p>
-                        </div>
-                        <div>
+                        <p className="text-gray-600">Symbiosis International University</p>
+                      </div>
+                      <div>
                           <p className="font-medium text-gray-700">Account No:</p>
-                          <p className="text-gray-600 font-mono">1234567890123456</p>
-                        </div>
-                        <div>
+                        <p className="text-gray-600 font-mono">1234567890123456</p>
+                      </div>
+                      <div>
                           <p className="font-medium text-gray-700">IFSC:</p>
-                          <p className="text-gray-600 font-mono">SBIN0001234</p>
-                        </div>
+                        <p className="text-gray-600 font-mono">SBIN0001234</p>
+                      </div>
                         <div className="p-2 bg-blue-50 border border-blue-200 rounded text-blue-800">
                           <strong>Important:</strong> Mention your Student ID in transfer reference
                         </div>
@@ -629,7 +629,7 @@ const PlayerDashboard = () => {
                         <div className="flex items-center justify-between sm:justify-end gap-3">
                           <p className="font-semibold text-sm sm:text-base">₹{payment.amount}</p>
                           <div className="flex items-center gap-2">
-                            {payment.status === 'Paid' ? (
+                          {payment.status === 'Paid' ? (
                               <Badge variant="default" className="bg-green-600 text-xs">Paid</Badge>
                             ) : (
                               <>
@@ -644,10 +644,10 @@ const PlayerDashboard = () => {
                                     });
                                   }}
                                 >
-                                  Pay Now
-                                </Button>
+                                Pay Now
+                              </Button>
                               </>
-                            )}
+                          )}
                           </div>
                         </div>
                       </div>
